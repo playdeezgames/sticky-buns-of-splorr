@@ -135,6 +135,12 @@ void Board::Move(int deltaX, int deltaY)
         std::cout << "You have moved the knight off of the board." << std::endl;
     }
 }
+void Board::ConsumeStickyBuns()
+{
+    supplies = std::min(supplies + FOOD_RESUPPLY, maximum_supplies);
+    std::cout << std::format("Sticky Buns! +{} supplies.", FOOD_RESUPPLY) << std::endl;
+    while(!SpawnToken(TokenType::STICKY_BUNS));
+}
 static const std::map<ChesstType, size_t> chesstGenerator = 
 {
     {ChesstType::EMPTY, 1},
@@ -142,16 +148,27 @@ static const std::map<ChesstType, size_t> chesstGenerator =
     {ChesstType::MIMIC, 1},
     {ChesstType::TRAP, 1}
 };
-void Board::ConsumeStickyBuns()
-{
-    supplies = std::min(supplies + FOOD_RESUPPLY, maximum_supplies);
-    std::cout << std::format("Sticky Buns! +{} supplies.", FOOD_RESUPPLY) << std::endl;
-    while(!SpawnToken(TokenType::STICKY_BUNS));
-}
 void Board::ConsumeChesst()
 {
-    std::cout << "The chesst is empty, like yer soul!" << std::endl;
     auto chesstType = RNG::FromGenerator(chesstGenerator);
+    switch (chesstType)
+    {
+        case ChesstType::EMPTY:
+        std::cout << "The chesst is empty, like yer soul!" << std::endl;
+        break;
+        case ChesstType::JOOLS:
+        std::cout << "You find jools!" << std::endl;
+        break;
+        case ChesstType::MIMIC:
+        std::cout << "That's not a chesst! That's a mimic!" << std::endl;
+        break;
+        case ChesstType::TRAP:
+        std::cout << "The chesst is trapped!" << std::endl;
+        break;
+        default:
+        throw "dint work";
+        break;
+    }
     while(!SpawnToken(TokenType::CHESST));
 }
 size_t Board::GetMoves() const
