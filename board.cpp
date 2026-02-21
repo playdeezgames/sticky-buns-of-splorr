@@ -7,6 +7,7 @@
 
 constexpr size_t INITIAL_SUPPLIES = 10;
 constexpr size_t FOOD_RESUPPLY = 5;
+constexpr size_t INITIAL_JOOLS = 0;
 
 bool Board::SpawnToken(const TokenType& tokenType)
 {
@@ -40,6 +41,7 @@ void Board::Initialize()
     moves = 0;
     supplies = INITIAL_SUPPLIES;
     maximum_supplies = INITIAL_SUPPLIES;
+    jools = INITIAL_JOOLS;
 }
 void Board::CleanUp()
 {
@@ -157,7 +159,7 @@ void Board::ConsumeChesst()
         std::cout << "The chesst is empty, like yer soul!" << std::endl;
         break;
         case ChesstType::JOOLS:
-        std::cout << "You find jools!" << std::endl;
+        AddJools();
         break;
         case ChesstType::MIMIC:
         std::cout << "That's not a chesst! That's a mimic!" << std::endl;
@@ -171,9 +173,27 @@ void Board::ConsumeChesst()
     }
     while(!SpawnToken(TokenType::CHESST));
 }
+static const std::map<size_t, size_t> joolsGenerator =
+{
+    {1,1},
+    {2,2},
+    {3,3},
+    {4,2},
+    {5,1}
+};
+void Board::AddJools()
+{
+    size_t addedJools = RNG::FromGenerator(joolsGenerator);
+    jools += addedJools;
+    std::cout << std::format("You find {} jools!", addedJools) << std::endl;
+}
 size_t Board::GetMoves() const
 {
     return moves;
+}
+size_t Board::GetJools() const
+{
+    return jools;
 }
 size_t Board::GetSupplies() const
 {

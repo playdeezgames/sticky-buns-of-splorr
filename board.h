@@ -9,10 +9,12 @@ private:
     size_t moves;
     size_t supplies;
     size_t maximum_supplies;
+    size_t jools;
     void RemoveBlocks();
     bool SpawnToken(const TokenType& tokenType);
     void ConsumeStickyBuns();
     void ConsumeChesst();
+    void AddJools();
 public:
     static constexpr size_t BOARD_WIDTH = 8;
     static constexpr size_t BOARD_HEIGHT = 8;
@@ -24,4 +26,5 @@ public:
     size_t GetMoves() const;
     size_t GetSupplies() const;
     size_t GetMaximumSupplies() const;
+    size_t GetJools() const;
 };

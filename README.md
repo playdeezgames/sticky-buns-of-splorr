@@ -16,9 +16,9 @@
 - [ ] Limited "health", which goes down if no supplies.
 - [ ] There is a place where you can buy upgrades
   - [ ] maximum supplies increase
-- [ ] Treasure "Chess-t"
+- [x] Treasure "Chess-t"
   - [ ] Might be trapped!
-  - [ ] Might be empty!
+  - [x] Might be empty!
   - [ ] Might have JOOLS!
   - [ ] Might be a MIMIC!
   
