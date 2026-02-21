@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/yermom/git/stream-sandbox/sandbox",
+            "program": "/home/yermom/git/sticky-buns-of-splorr/sbos",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

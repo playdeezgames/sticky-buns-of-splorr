@@ -1,8 +1,8 @@
 {
     "makefile.launchConfigurations": [
         {
-            "cwd": "/home/yermom/git/stream-sandbox",
-            "binaryPath": "/home/yermom/git/sandbox-sandbox/sandbox",
+            "cwd": "/home/yermom/git/sticky-buns-of-splorr",
+            "binaryPath": "/home/yermom/git/sticky-buns-of-splorr/sbos",
             "binaryArgs": []
         }
     ]
