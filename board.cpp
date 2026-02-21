@@ -1,0 +1,182 @@
+#include "board.h"
+#include "rng.h"
+#include <algorithm>
+#include <iostream>
+#include <format>
+#include "chessttype.h"
+
+constexpr size_t INITIAL_SUPPLIES = 10;
+constexpr size_t FOOD_RESUPPLY = 5;
+
+bool Board::SpawnToken(const TokenType& tokenType)
+{
+    size_t column = RNG::FromRange(0, BOARD_WIDTH-1);
+    size_t row = RNG::FromRange(0, BOARD_HEIGHT-1);
+    auto& cell = GetCell(column, row);
+    if(cell.GetToken().has_value())
+    {
+        return false;
+    }
+    Token token;
+    token.SetTokenType(tokenType);
+    cell.SetToken(token);
+    return true;
+}
+void Board::Initialize()
+{
+    CleanUp();
+    while(cells.size()<Board::BOARD_WIDTH)
+    {
+        std::vector<BoardCell> boardColumn;
+        while(boardColumn.size()<Board::BOARD_HEIGHT)
+        {
+            boardColumn.push_back(BoardCell());
+        }
+        cells.push_back(boardColumn);
+    }
+    while(!SpawnToken(TokenType::KNIGHT));
+    while(!SpawnToken(TokenType::STICKY_BUNS));
+    while(!SpawnToken(TokenType::CHESST));
+    moves = 0;
+    supplies = INITIAL_SUPPLIES;
+    maximum_supplies = INITIAL_SUPPLIES;
+}
+void Board::CleanUp()
+{
+    cells.clear();
+}
+const BoardCell& Board::GetCell(size_t column, size_t row) const
+{
+    return cells[column][row];
+}
+BoardCell& Board::GetCell(size_t column, size_t row)
+{
+    return cells[column][row];
+}
+void Board::Move(int deltaX, int deltaY)
+{
+    auto columnIter = std::find_if(
+        cells.begin(),
+        cells.end(), 
+        [](const auto& column)
+        {
+            return std::find_if(
+                column.begin(), 
+                column.end(), 
+                [](const auto& cell)
+                {
+                    const auto& token = cell.GetToken();
+                    return token.has_value() && TokenType::KNIGHT == token->GetTokenType();
+                }) != column.end();
+        });
+    if(columnIter==cells.end())
+    {
+        std::cout << "You cannot move a knight that does not exist!" << std::endl;
+        return;
+    }
+    int x = columnIter - cells.begin();
+    auto rowIter = std::find_if(
+        (*columnIter).begin(), 
+        (*columnIter).end(), 
+        [](const auto& cell)
+        {
+            const auto& token = cell.GetToken();
+            return token.has_value() && TokenType::KNIGHT == token->GetTokenType();
+        });
+    int y = rowIter - (*columnIter).begin();
+    auto token = rowIter->GetToken();
+    int nextX = x + deltaX;
+    int nextY = y + deltaY;
+    if(nextX>=0 && nextY>=0 && nextX<BOARD_WIDTH && nextY<BOARD_HEIGHT)
+    {
+        auto& destinationCell = GetCell(nextX, nextY);
+        const auto& destinationToken = destinationCell.GetToken();
+        std::optional<TokenType> tokenType = (destinationToken.has_value())?(std::optional<TokenType>(destinationToken->GetTokenType())):(std::nullopt);
+        if(destinationToken.has_value() && TokenType::BLOCK == destinationToken->GetTokenType())
+        {
+            std::cout << "Blocked!" << std::endl;
+        }
+        else
+        {
+            if(GetSupplies()>0)
+            {
+                --supplies;
+                RemoveBlocks();
+                destinationCell.SetToken(token);
+                ++moves;
+                Token blockToken;
+                blockToken.SetTokenType(TokenType::BLOCK);
+                rowIter->SetToken(blockToken);
+                if(tokenType.has_value())
+                {
+                    switch(*tokenType)
+                    {
+                        case TokenType::STICKY_BUNS:
+                            ConsumeStickyBuns();
+                        break;
+                        case TokenType::CHESST:
+                            ConsumeChesst();
+                        break;
+                        default:
+                            std::cout << "You just absorbed unknown token" << std::endl;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                std::cout << "Yer out of supplies!" <<std::endl;
+            }
+        }
+    }
+    else
+    {
+        GetCell(x,y).SetToken(std::nullopt);
+        std::cout << "You have moved the knight off of the board." << std::endl;
+    }
+}
+static const std::map<ChesstType, size_t> chesstGenerator = 
+{
+    {ChesstType::EMPTY, 1},
+    {ChesstType::JOOLS, 1},
+    {ChesstType::MIMIC, 1},
+    {ChesstType::TRAP, 1}
+};
+void Board::ConsumeStickyBuns()
+{
+    supplies = std::min(supplies + FOOD_RESUPPLY, maximum_supplies);
+    std::cout << std::format("Sticky Buns! +{} supplies.", FOOD_RESUPPLY) << std::endl;
+    while(!SpawnToken(TokenType::STICKY_BUNS));
+}
+void Board::ConsumeChesst()
+{
+    std::cout << "The chesst is empty, like yer soul!" << std::endl;
+    auto chesstType = RNG::FromGenerator(chesstGenerator);
+    while(!SpawnToken(TokenType::CHESST));
+}
+size_t Board::GetMoves() const
+{
+    return moves;
+}
+size_t Board::GetSupplies() const
+{
+    return supplies;
+}
+size_t Board::GetMaximumSupplies() const
+{
+    return maximum_supplies;
+}
+void Board::RemoveBlocks()
+{
+    for(auto& column : cells)
+    {
+        for(auto& cell: column)
+        {
+            auto token = cell.GetToken();
+            if(token.has_value() && TokenType::BLOCK == token->GetTokenType())
+            {
+                cell.SetToken(std::nullopt);
+            }
+        }
+    }
+}
