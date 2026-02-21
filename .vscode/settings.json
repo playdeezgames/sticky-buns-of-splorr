@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/yermom/git/stream-sandbox",
+            "binaryPath": "/home/yermom/git/sandbox-sandbox/sandbox",
+            "binaryArgs": []
+        }
+    ]
+}
