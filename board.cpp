@@ -101,7 +101,7 @@ void Board::Move(int deltaX, int deltaY)
         }
         else
         {
-            if(GetSupplies()>0 || GetHealth()>0)
+            if(GetHealth()>0)
             {
                 if(GetSupplies()>0)
                 {
@@ -109,6 +109,7 @@ void Board::Move(int deltaX, int deltaY)
                 }
                 else
                 {
+                    std::cout << "Yer out of supplies!" << std::endl;
                     --health;
                 }
                 RemoveBlocks();
@@ -135,14 +136,7 @@ void Board::Move(int deltaX, int deltaY)
             }
             else
             {
-                if(GetSupplies()==0)
-                {
-                    std::cout << "Yer out of supplies!" <<std::endl;
-                }
-                if(GetHealth()==0)
-                {
-                    std::cout << "Yer dead!" <<std::endl;
-                }
+                std::cout << "Yer dead!" <<std::endl;
             }
         }
     }
@@ -160,10 +154,10 @@ void Board::ConsumeStickyBuns()
 }
 static const std::map<ChesstType, size_t> chesstGenerator = 
 {
-    {ChesstType::EMPTY, 1},
-    {ChesstType::JOOLS, 1},
+    {ChesstType::EMPTY, 4},
+    {ChesstType::JOOLS, 3},
     {ChesstType::MIMIC, 1},
-    {ChesstType::TRAP, 1}
+    {ChesstType::TRAP, 2}
 };
 void Board::ConsumeChesst()
 {
@@ -180,7 +174,7 @@ void Board::ConsumeChesst()
         std::cout << "That's not a chesst! That's a mimic!" << std::endl;
         break;
         case ChesstType::TRAP:
-        std::cout << "The chesst is trapped!" << std::endl;
+        TriggerTrap();
         break;
         default:
         throw "dint work";
@@ -202,21 +196,25 @@ void Board::AddJools()
     jools += addedJools;
     std::cout << std::format("You find {} jools!", addedJools) << std::endl;
 }
-size_t Board::GetMoves() const
+static const std::map<size_t, size_t> trapDamageGenerator =
 {
-    return moves;
-}
-size_t Board::GetJools() const
+    {0,1},
+    {1,2},
+    {2,1}
+};
+void Board::TriggerTrap()
 {
-    return jools;
-}
-size_t Board::GetSupplies() const
-{
-    return supplies;
-}
-size_t Board::GetMaximumSupplies() const
-{
-    return maximum_supplies;
+    auto damage = RNG::FromGenerator(trapDamageGenerator);
+    std::cout << "The chesst is trapped!" << std::endl;
+    std::cout << std::format("You take {} damage!", damage) << std::endl;
+    if(damage>=health)
+    {
+        health = 0;
+    }
+    else
+    {
+        health -= damage;
+    }
 }
 void Board::RemoveBlocks()
 {

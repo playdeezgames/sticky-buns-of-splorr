@@ -13,7 +13,7 @@
 - [x] There is a power up that gives you more moves.
   - [x] maximum supplies
 - [x] Way of querying what token is on a square "?a1"
-- [ ] Limited "health", which goes down if no supplies.
+- [x] Limited "health", which goes down if no supplies.
 - [ ] There is a place where you can buy upgrades
   - [ ] maximum supplies increase
 - [x] Treasure "Chess-t"

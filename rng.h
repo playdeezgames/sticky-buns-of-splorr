@@ -22,7 +22,7 @@ public:
         size_t generated = RNG::FromRange(0UL, total-1);
         for(const auto& entry : generator)
         {
-            if(entry.second < generated)
+            if(entry.second > generated)
             {
                 return entry.first;
             }
