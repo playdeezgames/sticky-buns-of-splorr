@@ -73,6 +73,7 @@ void Thing::ShowStats() const
 {
     std::cout << std::format("Moves: {}", board.GetMoves()) << std::endl;
     std::cout << std::format("Supplies: {}/{}", board.GetSupplies(), board.GetMaximumSupplies()) << std::endl;
+    std::cout << std::format("Health: {}/{}", board.GetHealth(), board.GetMaximumHealth()) << std::endl;
     std::cout << std::format("Jools: {}", board.GetJools()) << std::endl;
 }
 void Thing::Run()

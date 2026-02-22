@@ -10,8 +10,8 @@
   - [x] Remove all blocks prior to making a new one.
 - [x] Limited number of moves left. (supplies?)
   - [x] current supplies
-- [ ] There is a power up that gives you more moves.
-  - [ ] maximum supplies
+- [x] There is a power up that gives you more moves.
+  - [x] maximum supplies
 - [x] Way of querying what token is on a square "?a1"
 - [ ] Limited "health", which goes down if no supplies.
 - [ ] There is a place where you can buy upgrades
@@ -19,7 +19,7 @@
 - [x] Treasure "Chess-t"
   - [ ] Might be trapped!
   - [x] Might be empty!
-  - [ ] Might have JOOLS!
+  - [x] Might have JOOLS!
   - [ ] Might be a MIMIC!
   
 

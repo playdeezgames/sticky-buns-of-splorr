@@ -6,6 +6,7 @@
 #include "chessttype.h"
 
 constexpr size_t INITIAL_SUPPLIES = 10;
+constexpr size_t INITIAL_HEALTH = 5;
 constexpr size_t FOOD_RESUPPLY = 5;
 constexpr size_t INITIAL_JOOLS = 0;
 
@@ -39,9 +40,9 @@ void Board::Initialize()
     while(!SpawnToken(TokenType::STICKY_BUNS));
     while(!SpawnToken(TokenType::CHESST));
     moves = 0;
-    supplies = INITIAL_SUPPLIES;
-    maximum_supplies = INITIAL_SUPPLIES;
+    supplies = maximum_supplies = INITIAL_SUPPLIES;
     jools = INITIAL_JOOLS;
+    health = maximum_health = INITIAL_HEALTH;
 }
 void Board::CleanUp()
 {
