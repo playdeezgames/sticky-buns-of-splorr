@@ -101,9 +101,16 @@ void Board::Move(int deltaX, int deltaY)
         }
         else
         {
-            if(GetSupplies()>0)
+            if(GetSupplies()>0 || GetHealth()>0)
             {
-                --supplies;
+                if(GetSupplies()>0)
+                {
+                    --supplies;
+                }
+                else
+                {
+                    --health;
+                }
                 RemoveBlocks();
                 destinationCell.SetToken(token);
                 ++moves;
@@ -128,7 +135,14 @@ void Board::Move(int deltaX, int deltaY)
             }
             else
             {
-                std::cout << "Yer out of supplies!" <<std::endl;
+                if(GetSupplies()==0)
+                {
+                    std::cout << "Yer out of supplies!" <<std::endl;
+                }
+                if(GetHealth()==0)
+                {
+                    std::cout << "Yer dead!" <<std::endl;
+                }
             }
         }
     }
