@@ -25,5 +25,5 @@ hello
 html/*.js
 html/*.wasm
 html/*.html
-#html/*.data
+html/*.data
 archive20260226/sbos

@@ -7,8 +7,6 @@
 constexpr int SCALE = 4;
 constexpr int SCREEN_WIDTH = VIEW_WIDTH * SCALE;
 constexpr int SCREEN_HEIGHT = VIEW_HEIGHT * SCALE;
-constexpr int BOARD_COLUMNS = 40;
-constexpr int BOARD_ROWS = 22;
 constexpr std::string_view GAME_TITLE = "The Blue Room";
 constexpr std::string_view TEXTURE_FILENAME = "romfont8x8.png";
 SDL_Texture* Application::texture = nullptr;
@@ -17,13 +15,12 @@ SDL_Renderer* Application::renderer = nullptr;
 SDL_Window* Application::window = nullptr;
 std::map<GameState, std::unique_ptr<State>> Application::states;
 GameState Application::gameState = GameState::ROOM;
-Board Application::board(BOARD_COLUMNS, BOARD_ROWS);
 std::vector<SDL_Rect> Application::src_rects;
 std::vector<SDL_Rect> Application::dst_rects;
 constexpr int TEXTURE_ROWS = 16;
 constexpr int TEXTURE_COLUMNS = 16;
-constexpr int TEXTURE_CELL_WIDTH = 16;
-constexpr int TEXTURE_CELL_HEIGHT = 16;
+constexpr int TEXTURE_CELL_WIDTH = 8;
+constexpr int TEXTURE_CELL_HEIGHT = 8;
 constexpr int VIEW_COLUMNS = VIEW_WIDTH / TEXTURE_CELL_WIDTH;
 constexpr int VIEW_ROWS = VIEW_HEIGHT / TEXTURE_CELL_HEIGHT;
 std::vector<SDL_Color> Application::palette =
@@ -79,16 +76,8 @@ void Application::Initialize()
     texture = IMG_LoadTexture(renderer, TEXTURE_FILENAME.data());
     SDL_RenderSetLogicalSize(renderer, VIEW_WIDTH, VIEW_HEIGHT);
 
-    states.emplace(GameState::ROOM, std::make_unique<RoomState>(board));
+    states.emplace(GameState::ROOM, std::make_unique<RoomState>());
 
-    for(auto column = 0; column < BOARD_COLUMNS; ++column)
-    {
-      for(auto row = 0; row < BOARD_ROWS; ++row)
-      {
-        board.GetColumn(column).GetCell(row).SetCellType(((column == 0) || (row == 0) || (column == BOARD_COLUMNS - 1) || (row == BOARD_ROWS - 1))?(CellType::WALL):(CellType::FLOOR));
-      }
-    }
-    board.GetColumn(1).GetCell(1).SetCellType(CellType::N00B);
 }
 void Application::Loop()
 {
