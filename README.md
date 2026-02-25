@@ -1,5 +1,8 @@
-# The Project
+# Emscripten/SDL Stuff
+- [ ] 16 color palette!
+- [ ] Frame Buffer (character, fgcolor, bgcolor)
 
+# The Project
 - [x] Chessboard (8x8).
 - [x] Knight.
 - [x] Move Like a Knight.

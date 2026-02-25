@@ -3,7 +3,7 @@
 #include "gamestate.h"
 #include <optional>
 constexpr int VIEW_WIDTH = 320;
-constexpr int VIEW_HEIGHT = 180;
+constexpr int VIEW_HEIGHT = 190;
 class State
 {
 private:
