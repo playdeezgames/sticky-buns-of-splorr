@@ -21,4 +21,8 @@
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
-sbos
+hello
+html/*.js
+html/*.wasm
+html/*.htmls
+archive20260226/sbos
