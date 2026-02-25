@@ -1,11 +1,12 @@
-#OBJS specifies which files to compile as part of the project
-OBJS = sbos.cpp thing.cpp board.cpp boardcell.cpp token.cpp rng.cpp
+CXX = g++
+EMXX = em++
+OUTPUT_DIR = html
+SRC_DIR = src
+OBJS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_NAME = hello
+CC = -g -w -std=c++20
 
-#OBJ_NAME specifies the name of our exectuable
-OBJ_NAME = sbos
-
-CC = -g -w
-
-#This is the target that compiles our executable
 all : $(OBJS)
-	g++ $(OBJS) $(CC) -o $(OBJ_NAME) -std=c++20
+	mkdir -p $(OUTPUT_DIR)
+	$(EMXX) $(OBJS) $(CC) -o $(OUTPUT_DIR)/index.html --shell-file custom.html -sUSE_SDL=2
+	$(CXX) $(OBJS) $(CC) -o $(OBJ_NAME) -lSDL2

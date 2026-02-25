@@ -17,9 +17,13 @@
 - [ ] There is a place where you can buy upgrades
   - [ ] maximum supplies increase
 - [x] Treasure "Chess-t"
-  - [ ] Might be trapped!
+  - [x] Might be trapped!
   - [x] Might be empty!
   - [x] Might have JOOLS!
   - [ ] Might be a MIMIC!
+- [ ] enemy - bishop
+- [ ] weapon - flogger
+- [ ] Port to emscripten
+
   
 
