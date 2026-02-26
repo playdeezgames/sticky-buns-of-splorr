@@ -25,6 +25,8 @@ constexpr int VIEW_COLUMNS = VIEW_WIDTH / TEXTURE_CELL_WIDTH;
 constexpr int VIEW_ROWS = VIEW_HEIGHT / TEXTURE_CELL_HEIGHT;
 FrameBuffer Application::frameBuffer(VIEW_COLUMNS, VIEW_ROWS);
 CommandBuffer Application::commandBuffer;
+WorldData Application::worldData;
+World Application::world(Application::worldData);
 std::map<FrameBufferCellColor,SDL_Color> Application::palette =
 {
   {FrameBufferCellColor::BLACK,{0,0,0,255}},
@@ -78,7 +80,7 @@ void Application::Initialize()
     texture = IMG_LoadTexture(renderer, TEXTURE_FILENAME.data());
     SDL_RenderSetLogicalSize(renderer, VIEW_WIDTH, VIEW_HEIGHT);
 
-    states.emplace(GameState::ROOM, std::make_unique<RoomState>(frameBuffer, commandBuffer));
+    states.emplace(GameState::ROOM, std::make_unique<RoomState>(frameBuffer, commandBuffer, world));
 }
 void Application::Loop()
 {

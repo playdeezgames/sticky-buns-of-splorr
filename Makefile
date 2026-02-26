@@ -4,7 +4,7 @@ OUTPUT_DIR = html
 SRC_DIR = src
 OBJS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_NAME = hello
-CC = -g -w -std=c++20
+CC = -g -std=c++20 -Wall
 
 all : $(OBJS)
 	mkdir -p $(OUTPUT_DIR)

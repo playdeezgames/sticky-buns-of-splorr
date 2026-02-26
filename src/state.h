@@ -20,4 +20,5 @@ public:
     }
     virtual void Draw() = 0;
     virtual std::optional<GameState> Update() = 0;
+    virtual ~State() {}
 };

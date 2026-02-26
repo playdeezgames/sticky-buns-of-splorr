@@ -60,6 +60,9 @@ bool RoomState::HandleCommand()
             case CommandType::RIGHT:
                 x = (x < BOARD_COLUMNS - 1) ? (x + 1) : (x);
                 break;
+            default:
+                //do nothing
+                break;
         }
         return true;
     }

@@ -8,6 +8,7 @@
 #include "framebuffer.h"
 #include "commandbuffer.h"
 #include <map>
+#include "world.h"
 class Application
 {
 private:
@@ -22,6 +23,8 @@ private:
     static std::map<FrameBufferCellColor, SDL_Color> palette;
     static FrameBuffer frameBuffer;
     static CommandBuffer commandBuffer;
+    static WorldData worldData;
+    static World world;
     static void CleanUp();
 public:
     static void Initialize();
