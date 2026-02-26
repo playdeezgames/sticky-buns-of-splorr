@@ -1,6 +1,7 @@
 #pragma once
 #include "framebuffercell.h"
 #include <vector>
+#include <optional>
 class FrameBuffer
 {
 private:
@@ -14,4 +15,10 @@ public:
     size_t GetRows() const;
     FrameBufferCell& GetCell(size_t column, size_t row);
     const FrameBufferCell& GetCell(size_t column, size_t row) const;
+    void SetCell(
+        size_t column, 
+        size_t row, 
+        std::optional<unsigned char> character, 
+        std::optional<FrameBufferCellColor> foreground, 
+        std::optional<FrameBufferCellColor> background);
 };

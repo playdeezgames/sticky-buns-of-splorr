@@ -25,3 +25,24 @@ const FrameBufferCell& FrameBuffer::GetCell(size_t column, size_t row) const
 {
     return _cells[column + row * _columns];
 }
+void FrameBuffer::SetCell(
+    size_t column, 
+    size_t row, 
+    std::optional<unsigned char> character, 
+    std::optional<FrameBufferCellColor> foreground, 
+    std::optional<FrameBufferCellColor> background)
+{
+    auto& cell = GetCell(column, row);
+    if(character.has_value())
+    {
+        cell.SetCharacter(*character);
+    }
+    if(foreground.has_value())
+    {
+        cell.SetForeground(*foreground);
+    }
+    if(background.has_value())
+    {
+        cell.SetBackground(*background);
+    }
+}

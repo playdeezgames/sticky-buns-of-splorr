@@ -83,10 +83,43 @@ void Application::Initialize()
 void Application::Loop()
 {
   SDL_Event event;
-  while (SDL_PollEvent(&event)) {
+  while (SDL_PollEvent(&event)) 
+  {
     if(event.type == SDL_QUIT)
     {
       quit = true;
+    }
+    else if(event.type == SDL_KEYDOWN)
+    {
+      switch(event.key.keysym.sym)
+      {
+        case SDLK_w:
+        case SDLK_z:
+            commandBuffer.Write(CommandType::UP);
+            break;
+        case SDLK_a:
+        case SDLK_q:
+            commandBuffer.Write(CommandType::LEFT);
+            break;
+        case SDLK_s:
+            commandBuffer.Write(CommandType::DOWN);
+            break;
+        case SDLK_d:
+            commandBuffer.Write(CommandType::RIGHT);
+            break;
+        case SDLK_SPACE:
+            commandBuffer.Write(CommandType::GREEN);
+            break;
+        case SDLK_BACKSPACE:
+            commandBuffer.Write(CommandType::RED);
+            break;
+        case SDLK_TAB:
+            commandBuffer.Write(CommandType::YELLOW);
+            break;
+        case SDLK_RETURN:
+            commandBuffer.Write(CommandType::BLUE);
+            break;
+      }
     }
   }
   if(!quit)
