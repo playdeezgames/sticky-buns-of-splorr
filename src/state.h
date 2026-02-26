@@ -2,12 +2,22 @@
 #include <SDL2/SDL.h>
 #include "gamestate.h"
 #include <optional>
+#include "framebuffer.h"
+#include "commandbuffer.h"
 constexpr int VIEW_WIDTH = 320;
 constexpr int VIEW_HEIGHT = 200;
 class State
 {
-private:
+protected:
+    FrameBuffer& _frameBuffer;
+    CommandBuffer& _commandBuffer;
+    State();
 public:
-    virtual void Draw(SDL_Renderer* renderer) = 0;
-    virtual std::optional<GameState> HandleEvent(const SDL_Event& event) = 0;
+    State(FrameBuffer& frameBuffer, CommandBuffer& commandBuffer)
+        : _frameBuffer(frameBuffer)
+        , _commandBuffer(commandBuffer)
+    {
+    }
+    virtual void Draw() = 0;
+    virtual std::optional<GameState> Update() = 0;
 };

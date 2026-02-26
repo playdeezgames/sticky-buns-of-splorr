@@ -1,17 +1,18 @@
 #include "roomstate.h"
 constexpr int CELL_WIDTH = 8;
 constexpr int CELL_HEIGHT = 8;
-void RoomState::Draw(SDL_Renderer* renderer)
+void RoomState::Draw()
 {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    for(int column=0;column<24;++column)
+    {
+        for(int row = 0; row<24;++row)
+        {
+            _frameBuffer.GetCell(column, row).SetBackground((((column/3)+(row/3))%2==0)?(FrameBufferCellColor::LIGHT_GRAY):(FrameBufferCellColor::DARK_GRAY));
+        }
+    }
 }
 
-std::optional<GameState> RoomState::HandleEvent(const SDL_Event& event)
+std::optional<GameState> RoomState::Update()
 {
-    if(event.type == SDL_QUIT)
-    {
-        return std::nullopt;
-    }
     return GameState::ROOM;
 }

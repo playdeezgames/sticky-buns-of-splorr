@@ -7,7 +7,7 @@
 constexpr int SCALE = 4;
 constexpr int SCREEN_WIDTH = VIEW_WIDTH * SCALE;
 constexpr int SCREEN_HEIGHT = VIEW_HEIGHT * SCALE;
-constexpr std::string_view GAME_TITLE = "The Blue Room";
+constexpr std::string_view GAME_TITLE = "Sticky Buns of SPLORR!!";
 constexpr std::string_view TEXTURE_FILENAME = "romfont8x8.png";
 SDL_Texture* Application::texture = nullptr;
 bool Application::quit = false;
@@ -23,24 +23,26 @@ constexpr int TEXTURE_CELL_WIDTH = 8;
 constexpr int TEXTURE_CELL_HEIGHT = 8;
 constexpr int VIEW_COLUMNS = VIEW_WIDTH / TEXTURE_CELL_WIDTH;
 constexpr int VIEW_ROWS = VIEW_HEIGHT / TEXTURE_CELL_HEIGHT;
-std::vector<SDL_Color> Application::palette =
+FrameBuffer Application::frameBuffer(VIEW_COLUMNS, VIEW_ROWS);
+CommandBuffer Application::commandBuffer;
+std::map<FrameBufferCellColor,SDL_Color> Application::palette =
 {
-  {0,0,0,255},
-  {0,0,170,255},
-  {0,170,0,255},
-  {0,170,170,255},
-  {170,0,0,255},
-  {170,0,170,255},
-  {170,85,0,255},
-  {170,170,170,255},
-  {85,85,85,255},
-  {85,85,255,255},
-  {85,255,85,255},
-  {85,255,255,255},
-  {255,85,85,255},
-  {255,85,255,255},
-  {255,255,85,255},
-  {255,255,255,255}
+  {FrameBufferCellColor::BLACK,{0,0,0,255}},
+  {FrameBufferCellColor::BLUE,{0,0,170,255}},
+  {FrameBufferCellColor::GREEN,{0,170,0,255}},
+  {FrameBufferCellColor::CYAN,{0,170,170,255}},
+  {FrameBufferCellColor::RED,{170,0,0,255}},
+  {FrameBufferCellColor::MAGENTA,{170,0,170,255}},
+  {FrameBufferCellColor::BROWN,{170,85,0,255}},
+  {FrameBufferCellColor::LIGHT_GRAY,{170,170,170,255}},
+  {FrameBufferCellColor::DARK_GRAY,{85,85,85,255}},
+  {FrameBufferCellColor::LIGHT_BLUE,{85,85,255,255}},
+  {FrameBufferCellColor::LIGHT_GREEN,{85,255,85,255}},
+  {FrameBufferCellColor::LIGHT_CYAN,{85,255,255,255}},
+  {FrameBufferCellColor::LIGHT_RED,{255,85,85,255}},
+  {FrameBufferCellColor::LIGHT_MAGENTA,{255,85,255,255}},
+  {FrameBufferCellColor::YELLOW,{255,255,85,255}},
+  {FrameBufferCellColor::WHITE,{255,255,255,255}}
 };
 void Application::Initialize()
 {
@@ -76,14 +78,20 @@ void Application::Initialize()
     texture = IMG_LoadTexture(renderer, TEXTURE_FILENAME.data());
     SDL_RenderSetLogicalSize(renderer, VIEW_WIDTH, VIEW_HEIGHT);
 
-    states.emplace(GameState::ROOM, std::make_unique<RoomState>());
-
+    states.emplace(GameState::ROOM, std::make_unique<RoomState>(frameBuffer, commandBuffer));
 }
 void Application::Loop()
 {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
-    auto nextState = states[gameState]->HandleEvent(event);
+    if(event.type == SDL_QUIT)
+    {
+      quit = true;
+    }
+  }
+  if(!quit)
+  {
+    auto nextState = states[gameState]->Update();
     if(nextState.has_value())
     {
       gameState = *nextState;
@@ -95,18 +103,22 @@ void Application::Loop()
   }
   if(!quit)
   {
-    //states[gameState]->Draw(renderer);
-    //SDL_SetTextureColorMod(texture, 255, 0, 255);
-    for(auto dst_rect : dst_rects)
+    states[gameState]->Draw();
+    for(size_t column = 0; column < frameBuffer.GetColumns(); ++column)
     {
-      SDL_Rect src_rect = src_rects[219];
-      SDL_Color color = palette[std::rand() % palette.size()];
-      SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
-      SDL_RenderCopy(renderer, texture, &src_rect, &dst_rect);
-      src_rect = src_rects[std::rand() % src_rects.size()];
-      color = palette[std::rand() % palette.size()];
-      SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
-      SDL_RenderCopy(renderer, texture, &src_rect, &dst_rect);
+      for(size_t row = 0; row < frameBuffer.GetRows(); ++row)
+      {
+        SDL_Rect dst_rect = dst_rects[row*frameBuffer.GetColumns()+column];
+        const auto& cell = frameBuffer.GetCell(column, row);
+        SDL_Rect src_rect = src_rects[219];
+        SDL_Color color = palette[cell.GetBackground()];
+        SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
+        SDL_RenderCopy(renderer, texture, &src_rect, &dst_rect);
+        color = palette[cell.GetForeground()];
+        SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
+        src_rect = src_rects[cell.GetCharacter()];
+        SDL_RenderCopy(renderer, texture, &src_rect, &dst_rect);
+      }
     }
     SDL_RenderPresent(renderer);
   }

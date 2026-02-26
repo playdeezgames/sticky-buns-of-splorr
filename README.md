@@ -1,6 +1,9 @@
 # Emscripten/SDL Stuff
-- [ ] 16 color palette!
-- [ ] Frame Buffer (character, fgcolor, bgcolor)
+- [x] 16 color palette!
+- [x] Frame Buffer (character, fgcolor, bgcolor)
+- [ ] Convert keydown events into commands
+- [ ] Represent board in a more "world data" manner.
+- [ ] parity: generate board and move knight
 
 # The Project
 - [x] Chessboard (8x8).

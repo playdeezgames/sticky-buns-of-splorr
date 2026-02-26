@@ -4,7 +4,9 @@
 class RoomState: public State
 {
 private:
+    RoomState();
 public:
-    void Draw(SDL_Renderer* renderer) override;
-    std::optional<GameState> HandleEvent(const SDL_Event& event) override;
+    RoomState(FrameBuffer& frameBuffer, CommandBuffer& commandBuffer):State(frameBuffer, commandBuffer){}
+    void Draw() override;
+    std::optional<GameState> Update() override;
 };

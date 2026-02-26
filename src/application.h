@@ -5,6 +5,9 @@
 #include <map>
 #include "gamestate.h"
 #include <vector>
+#include "framebuffer.h"
+#include "commandbuffer.h"
+#include <map>
 class Application
 {
 private:
@@ -16,7 +19,9 @@ private:
     static GameState gameState;
     static std::vector<SDL_Rect> src_rects;
     static std::vector<SDL_Rect> dst_rects;
-    static std::vector<SDL_Color> palette;
+    static std::map<FrameBufferCellColor, SDL_Color> palette;
+    static FrameBuffer frameBuffer;
+    static CommandBuffer commandBuffer;
     static void CleanUp();
 public:
     static void Initialize();
