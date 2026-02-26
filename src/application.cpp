@@ -80,6 +80,8 @@ void Application::Initialize()
     texture = IMG_LoadTexture(renderer, TEXTURE_FILENAME.data());
     SDL_RenderSetLogicalSize(renderer, VIEW_WIDTH, VIEW_HEIGHT);
 
+    world.Initialize();
+
     states.emplace(GameState::ROOM, std::make_unique<RoomState>(frameBuffer, commandBuffer, world));
 }
 void Application::Loop()

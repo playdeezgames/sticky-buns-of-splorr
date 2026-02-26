@@ -1,10 +1,8 @@
 #include "roomstate.h"
-constexpr int BOARD_COLUMNS = 8;
-constexpr int BOARD_ROWS = 8;
 constexpr int BOARD_CELL_WIDTH = 3;
 constexpr int BOARD_CELL_HEIGHT = 3;
-constexpr int BOARD_WIDTH = BOARD_CELL_WIDTH * BOARD_COLUMNS;
-constexpr int BOARD_HEIGHT = BOARD_CELL_HEIGHT * BOARD_ROWS;
+constexpr int BOARD_WIDTH = BOARD_CELL_WIDTH * World::BOARD_COLUMNS;
+constexpr int BOARD_HEIGHT = BOARD_CELL_HEIGHT * World::BOARD_ROWS;
 void RoomState::Draw()
 {
     //draw board
@@ -52,13 +50,13 @@ bool RoomState::HandleCommand()
                 y = (y > 0) ? (y - 1) : (y);
                 break;
             case CommandType::DOWN:
-                y = (y < BOARD_ROWS - 1) ? (y + 1) : (y);
+                y = (y < World::BOARD_ROWS - 1) ? (y + 1) : (y);
                 break;
             case CommandType::LEFT:
                 x = (x > 0) ? (x - 1) : (x);
                 break;
             case CommandType::RIGHT:
-                x = (x < BOARD_COLUMNS - 1) ? (x + 1) : (x);
+                x = (x < World::BOARD_COLUMNS - 1) ? (x + 1) : (x);
                 break;
             default:
                 //do nothing

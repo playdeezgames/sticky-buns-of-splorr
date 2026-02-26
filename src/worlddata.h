@@ -3,4 +3,5 @@ class WorldData
 {
 private:
 public:
+    void Clear();
 };

@@ -1,7 +1,7 @@
 # Emscripten/SDL Stuff
 - [x] 16 color palette!
 - [x] Frame Buffer (character, fgcolor, bgcolor)
-- [ ] Convert keydown events into commands
+- [x] Convert keydown events into commands
 - [ ] Represent board in a more "world data" manner.
 - [ ] parity: generate board and move knight
 
