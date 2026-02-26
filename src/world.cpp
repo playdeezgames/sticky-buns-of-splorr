@@ -2,5 +2,10 @@
 void World::Initialize()
 {
     _data.Clear();
-    //TODO: create board!
+    auto board = CreateBoard();
 }
+Board World::CreateBoard()
+{
+    return Board(_data, _data.CreateBoard());
+}
+
