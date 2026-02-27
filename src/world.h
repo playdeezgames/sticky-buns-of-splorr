@@ -8,6 +8,8 @@ class World
 private:
     WorldData& _data;
     World();
+    Board InitializeBoard();
+    void PopulateBoard(Board board);
 public:
     static constexpr size_t BOARD_COLUMNS = 8;
     static constexpr size_t BOARD_ROWS = 8;

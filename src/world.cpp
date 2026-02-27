@@ -1,16 +1,38 @@
 #include "world.h"
 #include "rng.h"
-void World::Initialize()
+#include "knightwalker.h"
+Board World::InitializeBoard()
 {
-    _data.Clear();
     auto board = CreateBoard(BOARD_COLUMNS, BOARD_ROWS);
-    for(size_t column = 0; column < BOARD_COLUMNS; ++column)
+    for(size_t column = 0; column < board.GetColumns(); ++column)
     {
-        for(size_t row = 0; row < BOARD_ROWS; ++row)
+        for(size_t row = 0; row < board.GetRows(); ++row)
         {
             board.SetLocation(column, row, CreateLocation(board, (column+row)%2==1));
         }
     }
+    for(int column = 0; column < (int)board.GetColumns(); ++column)
+    {
+        for(int row = 0; row < (int)board.GetRows(); ++row)
+        {
+            auto location = *board.GetLocation(column, row);
+            for(auto knightMoveType : AllKnightMoveTypes)
+            {
+                auto destinationXY = KnightWalker::Walk(column, row, knightMoveType);
+                int destinationX = std::get<0>(destinationXY);
+                int destinationY = std::get<1>(destinationXY);
+                if(destinationX >= 0 && destinationY >= 0 && destinationX < (int)board.GetColumns() && destinationY < (int)board.GetRows())
+                {
+                    auto destination = *board.GetLocation(destinationX, destinationY);
+                    location.SetNeighbor(knightMoveType, destination);
+                }
+            }
+        }
+    }
+    return board;
+}
+void World::PopulateBoard(Board board)
+{
     size_t column;
     size_t row;
     do
@@ -19,6 +41,12 @@ void World::Initialize()
         row = RNG::FromRange(0, BOARD_ROWS - 1);
     } while (board.GetLocation(column, row)->GetCharacter().has_value());
     SetAvatar(CreateCharacter(CharacterType::KNIGHT, *board.GetLocation(column, row)));
+}
+void World::Initialize()
+{
+    _data.Clear();
+    auto board = InitializeBoard();
+    PopulateBoard(board);
 }
 Board World::CreateBoard(size_t columns, size_t rows)
 {

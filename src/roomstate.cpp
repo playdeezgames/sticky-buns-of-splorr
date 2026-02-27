@@ -1,6 +1,31 @@
 #include "roomstate.h"
 constexpr int BOARD_CELL_WIDTH = 3;
 constexpr int BOARD_CELL_HEIGHT = 3;
+static FrameBufferCellColor GetBoardCellColor(bool light, bool isValid)
+{
+    if(isValid)
+    {
+        if(light)
+        {
+            return FrameBufferCellColor::YELLOW;
+        }
+        else
+        {
+            return FrameBufferCellColor::BROWN;
+        }
+    }
+    else
+    {
+        if(light)
+        {
+            return FrameBufferCellColor::LIGHT_GRAY;
+        }
+        else
+        {
+            return FrameBufferCellColor::DARK_GRAY;
+        }
+    }
+}
 void RoomState::Draw()
 {
     auto board = _world.GetAvatar()->GetLocation().GetBoard();
@@ -9,6 +34,23 @@ void RoomState::Draw()
         for(size_t row=0;row<board.GetRows();++row)
         {
             auto location = *board.GetLocation(column, row);
+            bool isValidMove = false;
+            for(auto knightMoveType : AllKnightMoveTypes)
+            {
+                auto neighbor = location.GetNeighbor(knightMoveType);
+                if(neighbor.has_value())
+                {
+                    auto character = neighbor->GetCharacter();
+                    if(character.has_value())
+                    {
+                        if(character->GetCharacterType() == CharacterType::KNIGHT)
+                        {
+                            isValidMove = true;
+                            break;
+                        }
+                    }
+                }
+            }
             _frameBuffer.Fill(
                 column * BOARD_CELL_WIDTH, 
                 row * BOARD_CELL_HEIGHT, 
@@ -16,7 +58,7 @@ void RoomState::Draw()
                 BOARD_CELL_HEIGHT, 
                 0, 
                 FrameBufferCellColor::BLACK, 
-                location.GetLight() ? FrameBufferCellColor::LIGHT_GRAY : FrameBufferCellColor::DARK_GRAY);
+                GetBoardCellColor(location.GetLight(), isValidMove));
             auto character = location.GetCharacter();
             if(character.has_value())
             {

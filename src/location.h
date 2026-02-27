@@ -1,6 +1,8 @@
 #pragma once
 #include "worlddata.h"
 #include "character.h"
+#include "knightmovetype.h"
+#include <vector>
 class Board;
 class Location
 {
@@ -17,4 +19,6 @@ public:
     void SetCharacter(std::optional<Character> character);
     Board GetBoard() const;
     bool GetLight() const;
+    void SetNeighbor(KnightMoveType knightMoveType, std::optional<Location> neighbor);
+    std::optional<Location> GetNeighbor(KnightMoveType knightMoveType) const;
 };

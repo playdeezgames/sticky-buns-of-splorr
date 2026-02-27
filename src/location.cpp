@@ -36,3 +36,23 @@ bool Location::GetLight() const
 {
     return GetLocationData().GetLight();
 }
+void Location::SetNeighbor(KnightMoveType knightMoveType, std::optional<Location> neighbor)
+{
+    if(neighbor.has_value())
+    {
+        GetLocationData().SetNeighborIndex(knightMoveType, neighbor->GetIndex());
+    }
+    else
+    {
+        GetLocationData().RemoveNeighborIndex(knightMoveType);
+    }
+}
+std::optional<Location> Location::GetNeighbor(KnightMoveType knightMoveType) const
+{
+    auto neighborIndex = GetLocationData().GetNeighborIndex(knightMoveType);
+    if(neighborIndex.has_value())
+    {
+        return Location(_data, *neighborIndex);
+    }
+    return std::nullopt;
+}
