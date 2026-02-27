@@ -15,7 +15,7 @@ public:
     size_t CreateBoard(size_t columns, size_t rows);
     BoardData& GetBoard(size_t index);
     const BoardData& GetBoard(size_t index) const;
-    size_t CreateLocation(size_t boardIndex);
+    size_t CreateLocation(size_t boardIndex, bool light);
     LocationData& GetLocation(size_t index);
     const LocationData& GetLocation(size_t index) const;
     size_t CreateCharacter(CharacterType characterType,size_t locationIndex);

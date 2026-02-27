@@ -14,7 +14,7 @@ public:
     World(WorldData& data):_data(data){}
     void Initialize();
     Board CreateBoard(size_t columns, size_t rows);
-    Location CreateLocation(const Board& board);
+    Location CreateLocation(const Board& board, bool light);
     Character CreateCharacter(CharacterType characterType, Location location);
     void SetAvatar(std::optional<Character> avatar);
     std::optional<Character> GetAvatar() const;

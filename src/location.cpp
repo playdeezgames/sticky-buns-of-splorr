@@ -32,3 +32,7 @@ Board Location::GetBoard() const
 {
     return Board(_data, GetLocationData().GetBoardIndex());
 }
+bool Location::GetLight() const
+{
+    return GetLocationData().GetLight();
+}

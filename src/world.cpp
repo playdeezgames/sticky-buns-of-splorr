@@ -8,7 +8,7 @@ void World::Initialize()
     {
         for(size_t row = 0; row < BOARD_ROWS; ++row)
         {
-            board.SetLocation(column, row, CreateLocation(board));
+            board.SetLocation(column, row, CreateLocation(board, (column+row)%2==1));
         }
     }
     size_t column;
@@ -25,9 +25,9 @@ Board World::CreateBoard(size_t columns, size_t rows)
     size_t boardIndex = _data.CreateBoard(columns, rows);
     return Board(_data, boardIndex);
 }
-Location World::CreateLocation(const Board& board)
+Location World::CreateLocation(const Board& board, bool light)
 {
-    size_t locationIndex = _data.CreateLocation(board.GetIndex());
+    size_t locationIndex = _data.CreateLocation(board.GetIndex(), light);
     return Location(_data, locationIndex);
 }
 Character World::CreateCharacter(CharacterType characterType, Location location)

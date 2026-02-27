@@ -1,33 +1,22 @@
 #include "roomstate.h"
 constexpr int BOARD_CELL_WIDTH = 3;
 constexpr int BOARD_CELL_HEIGHT = 3;
-constexpr int BOARD_WIDTH = BOARD_CELL_WIDTH * World::BOARD_COLUMNS;
-constexpr int BOARD_HEIGHT = BOARD_CELL_HEIGHT * World::BOARD_ROWS;
 void RoomState::Draw()
 {
-    //draw board
-    for(size_t column=0;column<BOARD_WIDTH;++column)
-    {
-        for(size_t row = 0; row<BOARD_HEIGHT;++row)
-        {
-            _frameBuffer.SetCell(
-                column, 
-                row, 
-                0, 
-                FrameBufferCellColor::BLACK, 
-                (((column/BOARD_CELL_WIDTH)+(row/BOARD_CELL_HEIGHT))%2==0)
-                    ?
-                (FrameBufferCellColor::LIGHT_GRAY)
-                    :
-                (FrameBufferCellColor::DARK_GRAY));
-        }
-    }
     auto board = _world.GetAvatar()->GetLocation().GetBoard();
     for(size_t column=0;column<board.GetColumns();++column)
     {
         for(size_t row=0;row<board.GetRows();++row)
         {
             auto location = *board.GetLocation(column, row);
+            _frameBuffer.Fill(
+                column * BOARD_CELL_WIDTH, 
+                row * BOARD_CELL_HEIGHT, 
+                BOARD_CELL_WIDTH, 
+                BOARD_CELL_HEIGHT, 
+                0, 
+                FrameBufferCellColor::BLACK, 
+                location.GetLight() ? FrameBufferCellColor::LIGHT_GRAY : FrameBufferCellColor::DARK_GRAY);
             auto character = location.GetCharacter();
             if(character.has_value())
             {

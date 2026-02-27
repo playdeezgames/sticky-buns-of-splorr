@@ -46,3 +46,20 @@ void FrameBuffer::SetCell(
         cell.SetBackground(*background);
     }
 }
+void FrameBuffer::Fill(
+    size_t column, 
+    size_t row, 
+    size_t columns, 
+    size_t rows, 
+    std::optional<unsigned char> character, 
+    std::optional<FrameBufferCellColor> foreground, 
+    std::optional<FrameBufferCellColor> background)
+{
+    for(size_t c = column; c < column + columns; ++c)
+    {
+        for(size_t r = row; r < row + rows; ++r)
+        {
+            SetCell(c, r, character, foreground, background);
+        }
+    }    
+}

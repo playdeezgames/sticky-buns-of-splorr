@@ -16,4 +16,5 @@ public:
     std::optional<Character> GetCharacter() const;
     void SetCharacter(std::optional<Character> character);
     Board GetBoard() const;
+    bool GetLight() const;
 };

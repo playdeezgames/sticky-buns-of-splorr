@@ -21,4 +21,12 @@ public:
         std::optional<unsigned char> character, 
         std::optional<FrameBufferCellColor> foreground, 
         std::optional<FrameBufferCellColor> background);
+    void Fill(
+        size_t column, 
+        size_t row, 
+        size_t columns, 
+        size_t rows, 
+        std::optional<unsigned char> character, 
+        std::optional<FrameBufferCellColor> foreground, 
+        std::optional<FrameBufferCellColor> background);
 };

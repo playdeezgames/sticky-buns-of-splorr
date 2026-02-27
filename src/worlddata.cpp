@@ -17,10 +17,10 @@ const BoardData& WorldData::GetBoard(size_t index) const
 {
     return _boards[index];
 }
-size_t WorldData::CreateLocation(size_t boardIndex)
+size_t WorldData::CreateLocation(size_t boardIndex, bool light)
 {
     size_t result = _locations.size();
-    _locations.push_back(LocationData(boardIndex));
+    _locations.push_back(LocationData(boardIndex, light));
     return result;
 }
 LocationData& WorldData::GetLocation(size_t index)
