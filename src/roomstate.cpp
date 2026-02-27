@@ -6,9 +6,9 @@ constexpr int BOARD_HEIGHT = BOARD_CELL_HEIGHT * World::BOARD_ROWS;
 void RoomState::Draw()
 {
     //draw board
-    for(int column=0;column<BOARD_WIDTH;++column)
+    for(size_t column=0;column<BOARD_WIDTH;++column)
     {
-        for(int row = 0; row<BOARD_HEIGHT;++row)
+        for(size_t row = 0; row<BOARD_HEIGHT;++row)
         {
             _frameBuffer.SetCell(
                 column, 
@@ -20,6 +20,27 @@ void RoomState::Draw()
                 (FrameBufferCellColor::LIGHT_GRAY)
                     :
                 (FrameBufferCellColor::DARK_GRAY));
+        }
+    }
+    auto board = _world.GetAvatar()->GetLocation().GetBoard();
+    for(size_t column=0;column<board.GetColumns();++column)
+    {
+        for(size_t row=0;row<board.GetRows();++row)
+        {
+            auto location = *board.GetLocation(column, row);
+            auto character = location.GetCharacter();
+            if(character.has_value())
+            {
+                switch(character->GetCharacterType())
+                {
+                    case CharacterType::KNIGHT:
+                        _frameBuffer.SetCell(column * BOARD_CELL_WIDTH + 1, row * BOARD_CELL_HEIGHT + 1, 'K', FrameBufferCellColor::BLACK, std::nullopt);
+                        break;
+                    default:
+                        //do nothing!
+                        break;
+                }
+            }
         }
     }
     //draw cursor

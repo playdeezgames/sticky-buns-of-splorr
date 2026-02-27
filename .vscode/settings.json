@@ -2,7 +2,7 @@
     "makefile.launchConfigurations": [
         {
             "cwd": "/home/yermom/git/sticky-buns-of-splorr",
-            "binaryPath": "/home/yermom/git/sticky-buns-of-splorr/sbos",
+            "binaryPath": "/home/yermom/git/sticky-buns-of-splorr/hello",
             "binaryArgs": []
         }
     ]
