@@ -1,5 +1,6 @@
 #include "character.h"
 #include "location.h"
+#include "board.h"
 CharacterData& Character::GetCharacterData()
 {
     return _data.GetCharacter(GetIndex());
@@ -24,4 +25,9 @@ void Character::Recycle()
 {
     _data.RecycleCharacter(GetIndex());
 }
+Board Character::GetBoard() const
+{
+    return GetLocation().GetBoard();
+}
+
 

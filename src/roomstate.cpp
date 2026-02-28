@@ -73,7 +73,9 @@ void RoomState::Draw()
         {
             auto location = *board.GetLocation(column, row);
             bool isValidMove = false;
-            if(!location.GetCharacter().has_value())
+            if(
+                !location.GetCharacter().has_value() || 
+                location.GetCharacter()->GetCharacterType() != CharacterType::BLOCK)
             {
                 for(auto knightMoveType : AllKnightMoveTypes)
                 {
@@ -157,7 +159,10 @@ void RoomState::AttemptMove()
     for(auto knightMoveType : AllKnightMoveTypes)
     {
         auto destination = location.GetNeighbor(knightMoveType);
-        if(destination.has_value() && !destination->GetCharacter().has_value() && destination->GetIndex() == cursorLocation.GetIndex())
+        if(
+            destination.has_value() && 
+            !(destination->GetCharacter().has_value() && destination->GetCharacter()->GetCharacterType() == CharacterType::BLOCK) && 
+            destination->GetIndex() == cursorLocation.GetIndex())
         {
             Move(location, cursorLocation);
         }
@@ -168,8 +173,19 @@ void RoomState::Move(Location location, Location cursorLocation)
     RemoveBlocks();
     auto character = *location.GetCharacter();
     _world.CreateCharacter(CharacterType::BLOCK, location);
+    auto otherCharacter = cursorLocation.GetCharacter();
     character.SetLocation(cursorLocation);
     cursorLocation.SetCharacter(character);
+    if(otherCharacter.has_value())
+    {
+        if(otherCharacter->GetCharacterType() == CharacterType::STICKY_BUNS)
+        {
+            //TODO: increase supplies
+            auto board = character.GetBoard();
+            _world.SpawnCharacter(board, CharacterType::STICKY_BUNS);
+        }
+        otherCharacter->Recycle();
+    }
 }
 void RoomState::RemoveBlocks()
 {
