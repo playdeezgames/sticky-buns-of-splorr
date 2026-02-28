@@ -37,5 +37,13 @@ std::optional<int> Character::GetStatistic(StatisticType statisticType) const
 {
     return GetCharacterData().GetStatistic(statisticType);
 }
+void Character::SetStatisticMinimum(StatisticType statisticType, std::optional<int> statisticMinimum)
+{
+    GetCharacterData().SetStatisticMinimum(statisticType, statisticMinimum);
+}
+void Character::SetStatisticMaximum(StatisticType statisticType, std::optional<int> statisticMaximum)
+{
+    GetCharacterData().SetStatisticMaximum(statisticType, statisticMaximum);
+}
 
 

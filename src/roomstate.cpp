@@ -176,8 +176,10 @@ void RoomState::AttemptMove()
 }
 void RoomState::Move(Location location, Location cursorLocation)
 {
+    constexpr int SUPPLIES_INCREASE = 5;
     RemoveBlocks();
     auto character = *location.GetCharacter();
+    character.SetStatistic(StatisticType::SUPPLIES, *character.GetStatistic(StatisticType::SUPPLIES) - 1);
     _world.CreateCharacter(CharacterType::BLOCK, location);
     auto otherCharacter = cursorLocation.GetCharacter();
     character.SetLocation(cursorLocation);
@@ -186,7 +188,7 @@ void RoomState::Move(Location location, Location cursorLocation)
     {
         if(otherCharacter->GetCharacterType() == CharacterType::STICKY_BUNS)
         {
-            //TODO: increase supplies
+            character.SetStatistic(StatisticType::SUPPLIES, *character.GetStatistic(StatisticType::SUPPLIES) + SUPPLIES_INCREASE);
             auto board = character.GetBoard();
             _world.SpawnCharacter(board, CharacterType::STICKY_BUNS);
         }

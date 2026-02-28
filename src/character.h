@@ -23,5 +23,7 @@ public:
     CharacterType GetCharacterType() const;
     void Recycle();
     void SetStatistic(StatisticType statisticType, std::optional<int> statisticValue);
+    void SetStatisticMinimum(StatisticType statisticType, std::optional<int> statisticMinimum);
+    void SetStatisticMaximum(StatisticType statisticType, std::optional<int> statisticMaximum);
     std::optional<int> GetStatistic(StatisticType statisticType) const;
 };

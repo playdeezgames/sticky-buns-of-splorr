@@ -48,6 +48,8 @@ void World::PopulateBoard(Board board)
     constexpr int KNIGHT_INITIAL_SUPPLIES = 15;
     auto avatar = SpawnCharacter(board, CharacterType::KNIGHT);
     SetAvatar(avatar);
+    avatar.SetStatisticMinimum(StatisticType::SUPPLIES, 0);
+    avatar.SetStatisticMaximum(StatisticType::SUPPLIES, KNIGHT_INITIAL_SUPPLIES);
     avatar.SetStatistic(StatisticType::SUPPLIES, KNIGHT_INITIAL_SUPPLIES);
     SpawnCharacter(board, CharacterType::STICKY_BUNS);
 }

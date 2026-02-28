@@ -2,8 +2,10 @@
 - [x] 16 color palette!
 - [x] Frame Buffer (character, fgcolor, bgcolor)
 - [x] Convert keydown events into commands
-- [ ] Represent board in a more "world data" manner.
-- [ ] parity: generate board and move knight
+- [x] Represent board in a more "world data" manner.
+- [x] parity: generate board and move knight
+- [ ] minimum supplies = 0
+- [ ] sticky buns increase supplies
 
 # The Project
 - [x] Chessboard (8x8).
