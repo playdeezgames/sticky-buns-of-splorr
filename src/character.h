@@ -15,5 +15,6 @@ public:
     Character(WorldData& data, size_t index): _data(data), _index(index) { }
     size_t GetIndex() const {return _index;}
     Location GetLocation() const;
+    void SetLocation(Location location);
     CharacterType GetCharacterType() const;
 };

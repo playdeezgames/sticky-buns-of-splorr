@@ -1,7 +1,37 @@
 #include "roomstate.h"
 constexpr int BOARD_CELL_WIDTH = 3;
 constexpr int BOARD_CELL_HEIGHT = 3;
-static FrameBufferCellColor GetBoardCellColor(bool light, bool isValid)
+static unsigned char GetBoardCellCharacter(const Location& location)
+{
+    auto character = location.GetCharacter();
+    if(character.has_value())
+    {
+        switch(character->GetCharacterType())
+        {
+            case CharacterType::KNIGHT:
+                return 'K';
+            default:
+                return 0;
+        }
+    }
+    return 0;
+}
+static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location)
+{
+    auto character = location.GetCharacter();
+    if(character.has_value())
+    {
+        switch(character->GetCharacterType())
+        {
+            case CharacterType::KNIGHT:
+                return FrameBufferCellColor::BLACK;
+            default:
+                return FrameBufferCellColor::BLACK;
+        }
+    }
+    return FrameBufferCellColor::BLACK;
+}
+static FrameBufferCellColor GetBoardCellBackgroundColor(bool light, bool isValid)
 {
     if(isValid)
     {
@@ -58,20 +88,8 @@ void RoomState::Draw()
                 BOARD_CELL_HEIGHT, 
                 0, 
                 FrameBufferCellColor::BLACK, 
-                GetBoardCellColor(location.GetLight(), isValidMove));
-            auto character = location.GetCharacter();
-            if(character.has_value())
-            {
-                switch(character->GetCharacterType())
-                {
-                    case CharacterType::KNIGHT:
-                        _frameBuffer.SetCell(column * BOARD_CELL_WIDTH + 1, row * BOARD_CELL_HEIGHT + 1, 'K', FrameBufferCellColor::BLACK, std::nullopt);
-                        break;
-                    default:
-                        //do nothing!
-                        break;
-                }
-            }
+                GetBoardCellBackgroundColor(location.GetLight(), isValidMove));
+            _frameBuffer.SetCell(column * BOARD_CELL_WIDTH + 1, row * BOARD_CELL_HEIGHT + 1, GetBoardCellCharacter(location), GetBoardCellForegroundColor(location), std::nullopt);
         }
     }
     //draw cursor
@@ -110,6 +128,9 @@ bool RoomState::HandleCommand()
             case CommandType::RIGHT:
                 x = (x < World::BOARD_COLUMNS - 1) ? (x + 1) : (x);
                 break;
+            case CommandType::GREEN:
+                AttemptMove();
+                break;
             default:
                 //do nothing
                 break;
@@ -117,4 +138,24 @@ bool RoomState::HandleCommand()
         return true;
     }
     return false;
+}
+void RoomState::AttemptMove()
+{
+    auto location = _world.GetAvatar()->GetLocation();
+    auto cursorLocation = *location.GetBoard().GetLocation(x,y);
+    for(auto knightMoveType : AllKnightMoveTypes)
+    {
+        auto destination = location.GetNeighbor(knightMoveType);
+        if(destination.has_value() && destination->GetIndex() == cursorLocation.GetIndex())
+        {
+            Move(location, cursorLocation);
+        }
+    }
+}
+void RoomState::Move(Location location, Location cursorLocation)
+{
+    auto character = *location.GetCharacter();
+    location.SetCharacter(std::nullopt);
+    character.SetLocation(cursorLocation);
+    cursorLocation.SetCharacter(character);
 }

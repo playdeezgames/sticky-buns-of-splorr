@@ -16,4 +16,8 @@ CharacterType Character::GetCharacterType() const
 {
     return GetCharacterData().GetCharacterType();
 }
+void Character::SetLocation(Location location)
+{
+    GetCharacterData().SetLocationIndex(location.GetIndex());
+}
 

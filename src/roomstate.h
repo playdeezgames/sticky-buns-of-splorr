@@ -10,6 +10,8 @@ private:
     size_t x;
     size_t y;
     bool HandleCommand();
+    void AttemptMove();
+    void Move(Location fromLocation, Location toLocation);
 public:
     RoomState(
         FrameBuffer& frameBuffer, 

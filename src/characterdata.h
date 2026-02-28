@@ -10,5 +10,6 @@ private:
 public:
     CharacterData(CharacterType characterType, size_t locationIndex):_characterType(characterType),_locationIndex(locationIndex){}
     size_t GetLocationIndex() const {return _locationIndex;}
+    void SetLocationIndex(size_t locationIndex){_locationIndex = locationIndex;}
     CharacterType GetCharacterType() const {return _characterType;}
 };
