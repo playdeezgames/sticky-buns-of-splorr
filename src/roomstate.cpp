@@ -10,6 +10,8 @@ static unsigned char GetBoardCellCharacter(const Location& location)
         {
             case CharacterType::KNIGHT:
                 return 'K';
+            case CharacterType::BLOCK:
+                return 'X';
             default:
                 return 0;
         }
@@ -24,6 +26,8 @@ static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location
         switch(character->GetCharacterType())
         {
             case CharacterType::KNIGHT:
+                return FrameBufferCellColor::BLACK;
+            case CharacterType::BLOCK:
                 return FrameBufferCellColor::BLACK;
             default:
                 return FrameBufferCellColor::BLACK;
@@ -65,6 +69,7 @@ void RoomState::Draw()
         {
             auto location = *board.GetLocation(column, row);
             bool isValidMove = false;
+            //TODO: you can only move here if the cell is empty
             for(auto knightMoveType : AllKnightMoveTypes)
             {
                 auto neighbor = location.GetNeighbor(knightMoveType);
@@ -154,8 +159,9 @@ void RoomState::AttemptMove()
 }
 void RoomState::Move(Location location, Location cursorLocation)
 {
+    //TODO: remove all blocks from board
     auto character = *location.GetCharacter();
-    location.SetCharacter(std::nullopt);
+    location.SetCharacter(std::nullopt);//TODO: place a block
     character.SetLocation(cursorLocation);
     cursorLocation.SetCharacter(character);
 }

@@ -1,2 +1,2 @@
 #pragma once
-enum class CharacterType { KNIGHT };
+enum class CharacterType { KNIGHT, BLOCK };

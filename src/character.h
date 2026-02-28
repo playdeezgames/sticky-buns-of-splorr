@@ -17,4 +17,5 @@ public:
     Location GetLocation() const;
     void SetLocation(Location location);
     CharacterType GetCharacterType() const;
+    void Recycle();
 };

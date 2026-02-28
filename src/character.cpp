@@ -20,4 +20,8 @@ void Character::SetLocation(Location location)
 {
     GetCharacterData().SetLocationIndex(location.GetIndex());
 }
+void Character::Recycle()
+{
+    _data.RecycleCharacter(GetIndex());
+}
 

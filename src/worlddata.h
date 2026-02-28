@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <set>
 #include "boarddata.h"
 #include "locationdata.h"
 #include "characterdata.h"
@@ -9,6 +10,7 @@ private:
     std::vector<BoardData> _boards;
     std::vector<LocationData> _locations;
     std::vector<CharacterData> _characters;
+    std::set<size_t> _recycledCharacters;
     std::optional<size_t> _avatarIndex;
 public:
     void Clear();
@@ -21,6 +23,7 @@ public:
     size_t CreateCharacter(CharacterType characterType,size_t locationIndex);
     CharacterData& GetCharacter(size_t index);
     const CharacterData& GetCharacter(size_t index) const;
+    void RecycleCharacter(size_t index);
     void SetAvatarIndex(std::optional<size_t> avatarIndex);
     std::optional<size_t> GetAvatarIndex() const;
 };

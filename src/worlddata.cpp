@@ -33,8 +33,15 @@ const LocationData& WorldData::GetLocation(size_t index) const
 }
 size_t WorldData::CreateCharacter(CharacterType characterType,size_t locationIndex)
 {
-    size_t result = _characters.size();
-    _characters.push_back(CharacterData(characterType, locationIndex));
+    if(_recycledCharacters.empty())
+    {
+        size_t result = _characters.size();
+        _characters.push_back(CharacterData(characterType, locationIndex));
+        return result;
+    }
+    size_t result = *_recycledCharacters.begin();
+    _recycledCharacters.erase(result);
+    _characters[result] = CharacterData(characterType, locationIndex);
     return result;
 }
 CharacterData& WorldData::GetCharacter(size_t index)
@@ -44,6 +51,10 @@ CharacterData& WorldData::GetCharacter(size_t index)
 const CharacterData& WorldData::GetCharacter(size_t index) const
 {
     return _characters[index];
+}
+void WorldData::RecycleCharacter(size_t index)
+{
+    _recycledCharacters.insert(index);
 }
 void WorldData::SetAvatarIndex(std::optional<size_t> avatarIndex)
 {
