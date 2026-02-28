@@ -9,7 +9,7 @@ static unsigned char GetBoardCellCharacter(const Location& location)
         switch(character->GetCharacterType())
         {
             case CharacterType::KNIGHT:
-                return 'K';
+                return 'N';
             case CharacterType::BLOCK:
                 return 'X';
             default:
@@ -69,19 +69,21 @@ void RoomState::Draw()
         {
             auto location = *board.GetLocation(column, row);
             bool isValidMove = false;
-            //TODO: you can only move here if the cell is empty
-            for(auto knightMoveType : AllKnightMoveTypes)
+            if(!location.GetCharacter().has_value())
             {
-                auto neighbor = location.GetNeighbor(knightMoveType);
-                if(neighbor.has_value())
+                for(auto knightMoveType : AllKnightMoveTypes)
                 {
-                    auto character = neighbor->GetCharacter();
-                    if(character.has_value())
+                    auto neighbor = location.GetNeighbor(knightMoveType);
+                    if(neighbor.has_value())
                     {
-                        if(character->GetCharacterType() == CharacterType::KNIGHT)
+                        auto character = neighbor->GetCharacter();
+                        if(character.has_value())
                         {
-                            isValidMove = true;
-                            break;
+                            if(character->GetCharacterType() == CharacterType::KNIGHT)
+                            {
+                                isValidMove = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -151,7 +153,7 @@ void RoomState::AttemptMove()
     for(auto knightMoveType : AllKnightMoveTypes)
     {
         auto destination = location.GetNeighbor(knightMoveType);
-        if(destination.has_value() && destination->GetIndex() == cursorLocation.GetIndex())
+        if(destination.has_value() && !destination->GetCharacter().has_value() && destination->GetIndex() == cursorLocation.GetIndex())
         {
             Move(location, cursorLocation);
         }
@@ -159,9 +161,26 @@ void RoomState::AttemptMove()
 }
 void RoomState::Move(Location location, Location cursorLocation)
 {
-    //TODO: remove all blocks from board
+    RemoveBlocks();
     auto character = *location.GetCharacter();
-    location.SetCharacter(std::nullopt);//TODO: place a block
+    _world.CreateCharacter(CharacterType::BLOCK, location);
     character.SetLocation(cursorLocation);
     cursorLocation.SetCharacter(character);
+}
+void RoomState::RemoveBlocks()
+{
+    auto board = _world.GetAvatar()->GetLocation().GetBoard();
+    for(size_t column = 0; column < board.GetColumns(); ++column)
+    {
+        for(size_t row = 0; row < board.GetRows(); ++row)
+        {
+            auto location = *board.GetLocation(column, row);
+            auto character = location.GetCharacter();
+            if(character.has_value() && character->GetCharacterType() == CharacterType::BLOCK)
+            {
+                location.SetCharacter(std::nullopt);
+                character->Recycle();
+            }
+        }
+    }
 }

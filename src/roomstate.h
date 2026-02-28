@@ -12,6 +12,7 @@ private:
     bool HandleCommand();
     void AttemptMove();
     void Move(Location fromLocation, Location toLocation);
+    void RemoveBlocks();
 public:
     RoomState(
         FrameBuffer& frameBuffer, 
