@@ -1,6 +1,7 @@
 #include "world.h"
 #include "rng.h"
 #include "knightwalker.h"
+#include "statistictype.h"
 Board World::InitializeBoard()
 {
     auto board = CreateBoard(BOARD_COLUMNS, BOARD_ROWS);
@@ -44,7 +45,10 @@ Character World::SpawnCharacter(Board& board, CharacterType characterType)
 }
 void World::PopulateBoard(Board board)
 {
-    SetAvatar(SpawnCharacter(board, CharacterType::KNIGHT));
+    constexpr int KNIGHT_INITIAL_SUPPLIES = 15;
+    auto avatar = SpawnCharacter(board, CharacterType::KNIGHT);
+    SetAvatar(avatar);
+    avatar.SetStatistic(StatisticType::SUPPLIES, KNIGHT_INITIAL_SUPPLIES);
     SpawnCharacter(board, CharacterType::STICKY_BUNS);
 }
 void World::Initialize()

@@ -29,5 +29,13 @@ Board Character::GetBoard() const
 {
     return GetLocation().GetBoard();
 }
+void Character::SetStatistic(StatisticType statisticType, std::optional<int> statisticValue)
+{
+    GetCharacterData().SetStatistic(statisticType, statisticValue);
+}
+std::optional<int> Character::GetStatistic(StatisticType statisticType) const
+{
+    return GetCharacterData().GetStatistic(statisticType);
+}
 
 

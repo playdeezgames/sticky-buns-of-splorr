@@ -2,6 +2,8 @@
 #include "worlddata.h"
 #include "characterdata.h"
 #include "charactertype.h"
+#include "statistictype.h"
+#include <optional>
 class Location;
 class Board;
 class Character
@@ -20,4 +22,6 @@ public:
     void SetLocation(Location location);
     CharacterType GetCharacterType() const;
     void Recycle();
+    void SetStatistic(StatisticType statisticType, std::optional<int> statisticValue);
+    std::optional<int> GetStatistic(StatisticType statisticType) const;
 };

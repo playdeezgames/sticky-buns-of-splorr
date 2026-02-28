@@ -67,7 +67,8 @@ static FrameBufferCellColor GetBoardCellBackgroundColor(bool light, bool isValid
 }
 void RoomState::Draw()
 {
-    auto board = _world.GetAvatar()->GetBoard();
+    auto avatar = *_world.GetAvatar();
+    auto board = avatar.GetBoard();
     for(size_t column=0;column<board.GetColumns();++column)
     {
         for(size_t row=0;row<board.GetRows();++row)
@@ -118,7 +119,7 @@ void RoomState::Draw()
     //draw stats
     size_t text_column = board.GetColumns() * BOARD_CELL_WIDTH;
     size_t text_row = 0;
-    _frameBuffer.WriteText(text_column, text_row++, "OHAI!", FrameBufferCellColor::MAGENTA, std::nullopt);
+    _frameBuffer.WriteText(text_column, text_row++, std::format("Supplies: {}", *avatar.GetStatistic(StatisticType::SUPPLIES)), FrameBufferCellColor::MAGENTA, std::nullopt);
 }
 
 std::optional<GameState> RoomState::Update()
