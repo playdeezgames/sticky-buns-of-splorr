@@ -11,7 +11,7 @@ const LocationData& Location::GetLocationData() const
 std::optional<Character> Location::GetCharacter() const
 {
     auto characterIndex = GetLocationData().GetCharacterIndex();
-    if(characterIndex.has_value())
+    if(characterIndex)
     {
         return Character(_data, *characterIndex);
     }
@@ -19,7 +19,7 @@ std::optional<Character> Location::GetCharacter() const
 }
 void Location::SetCharacter(std::optional<Character> character)
 {
-    if(character.has_value())
+    if(character)
     {
         GetLocationData().SetCharacterIndex(character->GetIndex());
     }
@@ -38,7 +38,7 @@ bool Location::GetLight() const
 }
 void Location::SetNeighbor(KnightMoveType knightMoveType, std::optional<Location> neighbor)
 {
-    if(neighbor.has_value())
+    if(neighbor)
     {
         GetLocationData().SetNeighborIndex(knightMoveType, neighbor->GetIndex());
     }
@@ -50,7 +50,7 @@ void Location::SetNeighbor(KnightMoveType knightMoveType, std::optional<Location
 std::optional<Location> Location::GetNeighbor(KnightMoveType knightMoveType) const
 {
     auto neighborIndex = GetLocationData().GetNeighborIndex(knightMoveType);
-    if(neighborIndex.has_value())
+    if(neighborIndex)
     {
         return Location(_data, *neighborIndex);
     }

@@ -5,9 +5,14 @@ void CharacterData::SetStatistic(
     StatisticType statisticType, 
     std::optional<int> statisticValue)
 {
-    if(statisticValue.has_value())
+    if(statisticValue)
     {
-        _statistics[statisticType] = *statisticValue;
+        _statistics.insert_or_assign(
+            statisticType, 
+            std::clamp(
+                *statisticValue,
+                GetStatisticMinimum(statisticType),
+                GetStatisticMaximum(statisticType)));
     }
     else
     {

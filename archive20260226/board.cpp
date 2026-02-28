@@ -15,7 +15,7 @@ bool Board::SpawnToken(const TokenType& tokenType)
     size_t column = RNG::FromRange(0, BOARD_WIDTH-1);
     size_t row = RNG::FromRange(0, BOARD_HEIGHT-1);
     auto& cell = GetCell(column, row);
-    if(cell.GetToken().has_value())
+    if(cell.GetToken())
     {
         return false;
     }
@@ -69,7 +69,7 @@ void Board::Move(int deltaX, int deltaY)
                 [](const auto& cell)
                 {
                     const auto& token = cell.GetToken();
-                    return token.has_value() && TokenType::KNIGHT == token->GetTokenType();
+                    return token && TokenType::KNIGHT == token->GetTokenType();
                 }) != column.end();
         });
     if(columnIter==cells.end())
@@ -84,7 +84,7 @@ void Board::Move(int deltaX, int deltaY)
         [](const auto& cell)
         {
             const auto& token = cell.GetToken();
-            return token.has_value() && TokenType::KNIGHT == token->GetTokenType();
+            return token && TokenType::KNIGHT == token->GetTokenType();
         });
     int y = rowIter - (*columnIter).begin();
     auto token = rowIter->GetToken();
@@ -94,8 +94,8 @@ void Board::Move(int deltaX, int deltaY)
     {
         auto& destinationCell = GetCell(nextX, nextY);
         const auto& destinationToken = destinationCell.GetToken();
-        std::optional<TokenType> tokenType = (destinationToken.has_value())?(std::optional<TokenType>(destinationToken->GetTokenType())):(std::nullopt);
-        if(destinationToken.has_value() && TokenType::BLOCK == destinationToken->GetTokenType())
+        std::optional<TokenType> tokenType = (destinationToken)?(std::optional<TokenType>(destinationToken->GetTokenType())):(std::nullopt);
+        if(destinationToken && TokenType::BLOCK == destinationToken->GetTokenType())
         {
             std::cout << "Blocked!" << std::endl;
         }
@@ -118,7 +118,7 @@ void Board::Move(int deltaX, int deltaY)
                 Token blockToken;
                 blockToken.SetTokenType(TokenType::BLOCK);
                 rowIter->SetToken(blockToken);
-                if(tokenType.has_value())
+                if(tokenType)
                 {
                     switch(*tokenType)
                     {
@@ -223,7 +223,7 @@ void Board::RemoveBlocks()
         for(auto& cell: column)
         {
             auto token = cell.GetToken();
-            if(token.has_value() && TokenType::BLOCK == token->GetTokenType())
+            if(token && TokenType::BLOCK == token->GetTokenType())
             {
                 cell.SetToken(std::nullopt);
             }

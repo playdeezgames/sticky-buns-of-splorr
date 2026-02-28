@@ -45,5 +45,9 @@ void Character::SetStatisticMaximum(StatisticType statisticType, std::optional<i
 {
     GetCharacterData().SetStatisticMaximum(statisticType, statisticMaximum);
 }
+int Character::GetStatisticMaximum(StatisticType statisticType) const
+{
+    return GetCharacterData().GetStatisticMaximum(statisticType);
+}
 
 

@@ -5,7 +5,7 @@ constexpr int BOARD_CELL_HEIGHT = 3;
 static unsigned char GetBoardCellCharacter(const Location& location)
 {
     auto character = location.GetCharacter();
-    if(character.has_value())
+    if(character)
     {
         switch(character->GetCharacterType())
         {
@@ -24,7 +24,7 @@ static unsigned char GetBoardCellCharacter(const Location& location)
 static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location)
 {
     auto character = location.GetCharacter();
-    if(character.has_value())
+    if(character)
     {
         switch(character->GetCharacterType())
         {
@@ -76,16 +76,16 @@ void RoomState::Draw()
             auto location = *board.GetLocation(column, row);
             bool isValidMove = false;
             if(
-                !location.GetCharacter().has_value() || 
+                !location.GetCharacter() || 
                 location.GetCharacter()->GetCharacterType() != CharacterType::BLOCK)
             {
                 for(auto knightMoveType : AllKnightMoveTypes)
                 {
                     auto neighbor = location.GetNeighbor(knightMoveType);
-                    if(neighbor.has_value())
+                    if(neighbor)
                     {
                         auto character = neighbor->GetCharacter();
-                        if(character.has_value())
+                        if(character)
                         {
                             if(character->GetCharacterType() == CharacterType::KNIGHT)
                             {
@@ -119,7 +119,15 @@ void RoomState::Draw()
     //draw stats
     size_t text_column = board.GetColumns() * BOARD_CELL_WIDTH;
     size_t text_row = 0;
-    _frameBuffer.WriteText(text_column, text_row++, std::format("Supplies: {}", *avatar.GetStatistic(StatisticType::SUPPLIES)), FrameBufferCellColor::MAGENTA, std::nullopt);
+    _frameBuffer.WriteText(
+        text_column, 
+        text_row++, 
+        std::format(
+            "Buns: {}/{}", 
+            *avatar.GetStatistic(StatisticType::SUPPLIES),
+            avatar.GetStatisticMaximum(StatisticType::SUPPLIES)), 
+        FrameBufferCellColor::MAGENTA, 
+        std::nullopt);
 }
 
 std::optional<GameState> RoomState::Update()
@@ -131,7 +139,7 @@ std::optional<GameState> RoomState::Update()
 bool RoomState::HandleCommand()
 {
     auto command = _commandBuffer.Read();
-    if(command.has_value())
+    if(command)
     {
         switch(*command)
         {
@@ -166,8 +174,8 @@ void RoomState::AttemptMove()
     {
         auto destination = location.GetNeighbor(knightMoveType);
         if(
-            destination.has_value() && 
-            !(destination->GetCharacter().has_value() && destination->GetCharacter()->GetCharacterType() == CharacterType::BLOCK) && 
+            destination && 
+            !(destination->GetCharacter() && destination->GetCharacter()->GetCharacterType() == CharacterType::BLOCK) && 
             destination->GetIndex() == cursorLocation.GetIndex())
         {
             Move(location, cursorLocation);
@@ -184,7 +192,7 @@ void RoomState::Move(Location location, Location cursorLocation)
     auto otherCharacter = cursorLocation.GetCharacter();
     character.SetLocation(cursorLocation);
     cursorLocation.SetCharacter(character);
-    if(otherCharacter.has_value())
+    if(otherCharacter)
     {
         if(otherCharacter->GetCharacterType() == CharacterType::STICKY_BUNS)
         {
@@ -204,7 +212,7 @@ void RoomState::RemoveBlocks()
         {
             auto location = *board.GetLocation(column, row);
             auto character = location.GetCharacter();
-            if(character.has_value() && character->GetCharacterType() == CharacterType::BLOCK)
+            if(character && character->GetCharacterType() == CharacterType::BLOCK)
             {
                 location.SetCharacter(std::nullopt);
                 character->Recycle();

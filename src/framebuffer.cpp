@@ -33,15 +33,15 @@ void FrameBuffer::SetCell(
     std::optional<FrameBufferCellColor> background)
 {
     auto& cell = GetCell(column, row);
-    if(character.has_value())
+    if(character)
     {
         cell.SetCharacter(*character);
     }
-    if(foreground.has_value())
+    if(foreground)
     {
         cell.SetForeground(*foreground);
     }
-    if(background.has_value())
+    if(background)
     {
         cell.SetBackground(*background);
     }

@@ -9,7 +9,7 @@ const BoardData& Board::GetBoardData() const
 }
 void Board::SetLocation(size_t column, size_t row, std::optional<Location> location)
 {
-    if(location.has_value())
+    if(location)
     {
         GetBoardData().SetLocationIndex(column, row, location->GetIndex());
     }
@@ -21,7 +21,7 @@ void Board::SetLocation(size_t column, size_t row, std::optional<Location> locat
 std::optional<Location> Board::GetLocation(size_t column, size_t row) const
 {
     auto locationIndex = GetBoardData().GetLocationIndex(column, row);
-    if(locationIndex.has_value())
+    if(locationIndex)
     {
         return Location(_data, *locationIndex);
     }

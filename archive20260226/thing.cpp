@@ -37,7 +37,7 @@ void Thing::DrawBoard() const
         for(const auto& column: std::views::iota((size_t)0,board.BOARD_WIDTH))
         {
             const auto& token = board.GetCell(column, row).GetToken();
-            if(token.has_value())
+            if(token)
             {
                 switch(token->GetTokenType())
                 {
@@ -158,7 +158,7 @@ void Thing::Inspect(int column, int row) const
 {
     auto cell = board.GetCell(column, row);
     auto token = cell.GetToken();
-    if(token.has_value())
+    if(token)
     {
         switch(token->GetTokenType())
         {

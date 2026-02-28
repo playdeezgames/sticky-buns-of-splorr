@@ -129,7 +129,7 @@ void Application::Loop()
   if(!quit)
   {
     auto nextState = states[gameState]->Update();
-    if(nextState.has_value())
+    if(nextState)
     {
       gameState = *nextState;
     }

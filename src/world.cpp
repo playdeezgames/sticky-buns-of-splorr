@@ -40,7 +40,7 @@ Character World::SpawnCharacter(Board& board, CharacterType characterType)
     {
         column = RNG::FromRange(0, BOARD_COLUMNS - 1);
         row = RNG::FromRange(0, BOARD_ROWS - 1);
-    } while (board.GetLocation(column, row)->GetCharacter().has_value());
+    } while (board.GetLocation(column, row)->GetCharacter());
     return CreateCharacter(characterType, *board.GetLocation(column, row));
 }
 void World::PopulateBoard(Board board)
@@ -78,7 +78,7 @@ Character World::CreateCharacter(CharacterType characterType, Location location)
 }
 void World::SetAvatar(std::optional<Character> avatar)
 {
-    if(avatar.has_value())
+    if(avatar)
     {
         _data.SetAvatarIndex(avatar->GetIndex());
     }
@@ -90,7 +90,7 @@ void World::SetAvatar(std::optional<Character> avatar)
 std::optional<Character> World::GetAvatar() const
 {
     auto avatarIndex = _data.GetAvatarIndex();
-    if(avatarIndex.has_value())
+    if(avatarIndex)
     {
         return Character(_data, *avatarIndex);
     }

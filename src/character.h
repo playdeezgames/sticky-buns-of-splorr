@@ -26,4 +26,5 @@ public:
     void SetStatisticMinimum(StatisticType statisticType, std::optional<int> statisticMinimum);
     void SetStatisticMaximum(StatisticType statisticType, std::optional<int> statisticMaximum);
     std::optional<int> GetStatistic(StatisticType statisticType) const;
+    int GetStatisticMaximum(StatisticType statisticType) const;
 };
