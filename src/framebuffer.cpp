@@ -63,3 +63,20 @@ void FrameBuffer::Fill(
         }
     }    
 }
+void FrameBuffer::WriteText(
+    size_t column, 
+    size_t row, 
+    const std::string& text, 
+    std::optional<FrameBufferCellColor> foreground, 
+    std::optional<FrameBufferCellColor> background)
+{
+    for(auto character: text)
+    {
+        SetCell(
+            column++,
+            row,
+            character,
+            foreground,
+            background);
+    }
+}

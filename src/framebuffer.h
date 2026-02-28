@@ -2,6 +2,7 @@
 #include "framebuffercell.h"
 #include <vector>
 #include <optional>
+#include <string>
 class FrameBuffer
 {
 private:
@@ -27,6 +28,12 @@ public:
         size_t columns, 
         size_t rows, 
         std::optional<unsigned char> character, 
+        std::optional<FrameBufferCellColor> foreground, 
+        std::optional<FrameBufferCellColor> background);
+    void WriteText(
+        size_t column, 
+        size_t row, 
+        const std::string& text, 
         std::optional<FrameBufferCellColor> foreground, 
         std::optional<FrameBufferCellColor> background);
 };

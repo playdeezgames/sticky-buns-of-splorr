@@ -1,4 +1,5 @@
 #include "roomstate.h"
+#include <format>
 constexpr int BOARD_CELL_WIDTH = 3;
 constexpr int BOARD_CELL_HEIGHT = 3;
 static unsigned char GetBoardCellCharacter(const Location& location)
@@ -66,7 +67,7 @@ static FrameBufferCellColor GetBoardCellBackgroundColor(bool light, bool isValid
 }
 void RoomState::Draw()
 {
-    auto board = _world.GetAvatar()->GetLocation().GetBoard();
+    auto board = _world.GetAvatar()->GetBoard();
     for(size_t column=0;column<board.GetColumns();++column)
     {
         for(size_t row=0;row<board.GetRows();++row)
@@ -114,6 +115,10 @@ void RoomState::Draw()
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH + 2, y * BOARD_CELL_HEIGHT, 0xbb, std::nullopt, std::nullopt);
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH + 2, y * BOARD_CELL_HEIGHT + 2, 0xbc, std::nullopt, std::nullopt);
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH, y * BOARD_CELL_HEIGHT + 2, 0xc8, std::nullopt, std::nullopt);
+    //draw stats
+    size_t text_column = board.GetColumns() * BOARD_CELL_WIDTH;
+    size_t text_row = 0;
+    _frameBuffer.WriteText(text_column, text_row++, "OHAI!", FrameBufferCellColor::MAGENTA, std::nullopt);
 }
 
 std::optional<GameState> RoomState::Update()
