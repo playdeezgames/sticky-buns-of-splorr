@@ -31,7 +31,7 @@ Board World::InitializeBoard()
     }
     return board;
 }
-void World::PopulateBoard(Board board)
+Character World::SpawnCharacter(Board& board, CharacterType characterType)
 {
     size_t column;
     size_t row;
@@ -40,7 +40,12 @@ void World::PopulateBoard(Board board)
         column = RNG::FromRange(0, BOARD_COLUMNS - 1);
         row = RNG::FromRange(0, BOARD_ROWS - 1);
     } while (board.GetLocation(column, row)->GetCharacter().has_value());
-    SetAvatar(CreateCharacter(CharacterType::KNIGHT, *board.GetLocation(column, row)));
+    return CreateCharacter(characterType, *board.GetLocation(column, row));
+}
+void World::PopulateBoard(Board board)
+{
+    SetAvatar(SpawnCharacter(board, CharacterType::KNIGHT));
+    SpawnCharacter(board, CharacterType::STICKY_BUNS);
 }
 void World::Initialize()
 {

@@ -10,6 +10,7 @@ private:
     World();
     Board InitializeBoard();
     void PopulateBoard(Board board);
+    Character SpawnCharacter(Board& board, CharacterType characterType);
 public:
     static constexpr size_t BOARD_COLUMNS = 8;
     static constexpr size_t BOARD_ROWS = 8;

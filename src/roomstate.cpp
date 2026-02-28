@@ -8,6 +8,8 @@ static unsigned char GetBoardCellCharacter(const Location& location)
     {
         switch(character->GetCharacterType())
         {
+            case CharacterType::STICKY_BUNS:
+                return '@';
             case CharacterType::KNIGHT:
                 return 'N';
             case CharacterType::BLOCK:
@@ -25,6 +27,8 @@ static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location
     {
         switch(character->GetCharacterType())
         {
+            case CharacterType::STICKY_BUNS:
+                return FrameBufferCellColor::WHITE;
             case CharacterType::KNIGHT:
                 return FrameBufferCellColor::BLACK;
             case CharacterType::BLOCK:
