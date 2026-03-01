@@ -6,6 +6,24 @@
 - [x] parity: generate board and move knight
 - [x] minimum supplies = 0
 - [x] sticky buns increase supplies
+- [ ] how to restart the game once dead?
+- [ ] butthole checking
+  - [ ] nothing
+  - [ ] jools
+  - [ ] trap
+  - [ ] flogger
+  - [ ] armor
+  - [ ] potion
+- [ ] flogger(weapon)
+- [ ] armor
+- [ ] bishop
+- [ ] shoppe
+- [ ] potion
+- [ ] +max supplies
+- [ ] spawn additional enemy countdown(inversely proportional to level?)
+- [ ] xp and xp levels(level up ++maxhp & full heal)
+- [ ] bishop takes a turn when you attack and don't defeat him?
+- [ ] pawns(8 pawns on the board. when they are defeated, the bishop is spawned?)
 
 # The Project
 - [x] Chessboard (8x8).

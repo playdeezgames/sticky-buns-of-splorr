@@ -48,22 +48,22 @@ static FrameBufferCellColor GetBoardCellBackgroundColor(bool light, bool isValid
     {
         if(light)
         {
-            return FrameBufferCellColor::YELLOW;
+            return FrameBufferCellColor::LIGHT_CYAN;
         }
         else
         {
-            return FrameBufferCellColor::BROWN;
+            return FrameBufferCellColor::CYAN;
         }
     }
     else
     {
         if(light)
         {
-            return FrameBufferCellColor::LIGHT_GRAY;
+            return FrameBufferCellColor::LIGHT_BLUE;
         }
         else
         {
-            return FrameBufferCellColor::DARK_GRAY;
+            return FrameBufferCellColor::BLUE;
         }
     }
 }
@@ -77,7 +77,7 @@ bool RoomState::IsValidMoveDestination(Location location)
             auto character = neighbor->GetCharacter();
             if(character)
             {
-                if(character->GetCharacterType() == CharacterType::KNIGHT)
+                if(character->GetCharacterType() == CharacterType::KNIGHT && character->GetStatistic(StatisticType::HEALTH) > 0)
                 {
                     return true;
                 }
@@ -146,6 +146,15 @@ void RoomState::DrawStats()
             *avatar.GetStatistic(StatisticType::SUPPLIES),
             avatar.GetStatisticMaximum(StatisticType::SUPPLIES)), 
         FrameBufferCellColor::MAGENTA, 
+        std::nullopt);
+    _frameBuffer.WriteText(
+        text_column, 
+        text_row++, 
+        std::format(
+            "Health: {}/{}", 
+            *avatar.GetStatistic(StatisticType::HEALTH),
+            avatar.GetStatisticMaximum(StatisticType::HEALTH)), 
+        FrameBufferCellColor::LIGHT_RED, 
         std::nullopt);
     _frameBuffer.WriteText(
         text_column, 
@@ -270,7 +279,8 @@ bool RoomState::HandleCommand()
 }
 void RoomState::AttemptMove()
 {
-    auto location = _world.GetAvatar()->GetLocation();
+    auto avatar = *_world.GetAvatar();
+    auto location = avatar.GetLocation();
     auto cursorLocation = *location.GetBoard().GetLocation(x,y);
     for(auto knightMoveType : AllKnightMoveTypes)
     {
@@ -278,7 +288,8 @@ void RoomState::AttemptMove()
         if(
             destination && 
             !(destination->GetCharacter() && destination->GetCharacter()->GetCharacterType() == CharacterType::BLOCK) && 
-            destination->GetIndex() == cursorLocation.GetIndex())
+            destination->GetIndex() == cursorLocation.GetIndex() &&
+            avatar.GetStatistic(StatisticType::HEALTH) > 0)
         {
             Move(location, cursorLocation);
         }
@@ -302,7 +313,15 @@ void RoomState::Move(Location location, Location cursorLocation)
 {
     RemoveBlocks();
     auto character = *location.GetCharacter();
-    character.SetStatistic(StatisticType::SUPPLIES, *character.GetStatistic(StatisticType::SUPPLIES) - 1);
+    auto supplies = *character.GetStatistic(StatisticType::SUPPLIES);
+    if(supplies>0)
+    {
+        character.SetStatistic(StatisticType::SUPPLIES, supplies - 1);
+    }
+    else
+    {
+        character.SetStatistic(StatisticType::HEALTH, *character.GetStatistic(StatisticType::HEALTH) - 1);
+    }
     _world.CreateCharacter(CharacterType::BLOCK, location);
     auto otherCharacter = cursorLocation.GetCharacter();
     character.SetLocation(cursorLocation);

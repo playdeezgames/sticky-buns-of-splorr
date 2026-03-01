@@ -47,11 +47,28 @@ Character World::SpawnCharacter(Board& board, CharacterType characterType)
 void World::PopulateBoard(Board board)
 {
     constexpr int KNIGHT_INITIAL_SUPPLIES = 15;
+    constexpr int KNIGHT_INITIAL_HEALTH = 3;
     auto avatar = SpawnCharacter(board, CharacterType::KNIGHT);
     SetAvatar(avatar);
     avatar.SetStatisticMinimum(StatisticType::SUPPLIES, 0);
     avatar.SetStatisticMaximum(StatisticType::SUPPLIES, KNIGHT_INITIAL_SUPPLIES);
     avatar.SetStatistic(StatisticType::SUPPLIES, KNIGHT_INITIAL_SUPPLIES);
+    avatar.SetStatisticMinimum(StatisticType::HEALTH, 0);
+    avatar.SetStatisticMaximum(StatisticType::HEALTH, KNIGHT_INITIAL_HEALTH);
+    avatar.SetStatistic(StatisticType::HEALTH, KNIGHT_INITIAL_HEALTH);
+    avatar.SetStatisticMinimum(StatisticType::ATTACK, 0);
+    avatar.SetStatistic(StatisticType::ATTACK, 0);
+    avatar.SetStatisticMinimum(StatisticType::DEFEND, 0);
+    avatar.SetStatistic(StatisticType::DEFEND, 0);
+    avatar.SetStatisticMinimum(StatisticType::POTIONS, 0);
+    avatar.SetStatistic(StatisticType::POTIONS, 0);
+    avatar.SetStatisticMinimum(StatisticType::JOOLS, 0);
+    avatar.SetStatistic(StatisticType::JOOLS, 0);
+    avatar.SetStatisticMinimum(StatisticType::XP, 0);
+    avatar.SetStatistic(StatisticType::XP, 0);
+    avatar.SetStatisticMinimum(StatisticType::XP_LEVEL, 1);
+    avatar.SetStatistic(StatisticType::XP_LEVEL, 1);
+    avatar.SetStatistic(StatisticType::XP_GOAL, 10);
     SpawnCharacter(board, CharacterType::STICKY_BUNS);
     SpawnCharacter(board, CharacterType::BUTTHOLE);
 }
