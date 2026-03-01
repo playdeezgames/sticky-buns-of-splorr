@@ -15,6 +15,11 @@ private:
     void RemoveBlocks();
     void ConsumeStickyBuns(Character& character, Character& otherCharacter);
     void CheckButthole(Character& character, Character& otherCharacter);
+    void DrawBoard();
+    void DrawCursorFrame();
+    void DrawStats();
+    void DrawStatusBar();
+    static bool IsValidMoveDestination(Location location);
 public:
     RoomState(
         FrameBuffer& frameBuffer, 

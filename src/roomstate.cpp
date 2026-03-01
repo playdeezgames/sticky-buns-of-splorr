@@ -67,7 +67,26 @@ static FrameBufferCellColor GetBoardCellBackgroundColor(bool light, bool isValid
         }
     }
 }
-void RoomState::Draw()
+bool RoomState::IsValidMoveDestination(Location location)
+{
+    for(auto knightMoveType : AllKnightMoveTypes)
+    {
+        auto neighbor = location.GetNeighbor(knightMoveType);
+        if(neighbor)
+        {
+            auto character = neighbor->GetCharacter();
+            if(character)
+            {
+                if(character->GetCharacterType() == CharacterType::KNIGHT)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+void RoomState::DrawBoard()
 {
     auto avatar = *_world.GetAvatar();
     auto board = avatar.GetBoard();
@@ -81,22 +100,7 @@ void RoomState::Draw()
                 !location.GetCharacter() || 
                 location.GetCharacter()->GetCharacterType() != CharacterType::BLOCK)
             {
-                for(auto knightMoveType : AllKnightMoveTypes)
-                {
-                    auto neighbor = location.GetNeighbor(knightMoveType);
-                    if(neighbor)
-                    {
-                        auto character = neighbor->GetCharacter();
-                        if(character)
-                        {
-                            if(character->GetCharacterType() == CharacterType::KNIGHT)
-                            {
-                                isValidMove = true;
-                                break;
-                            }
-                        }
-                    }
-                }
+                isValidMove = IsValidMoveDestination(location);
             }
             _frameBuffer.Fill(
                 column * BOARD_CELL_WIDTH, 
@@ -109,7 +113,9 @@ void RoomState::Draw()
             _frameBuffer.SetCell(column * BOARD_CELL_WIDTH + 1, row * BOARD_CELL_HEIGHT + 1, GetBoardCellCharacter(location), GetBoardCellForegroundColor(location), std::nullopt);
         }
     }
-    //draw cursor
+}
+void RoomState::DrawCursorFrame()
+{
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH, y * BOARD_CELL_HEIGHT, 0xc9, std::nullopt, std::nullopt);
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH + 1, y * BOARD_CELL_HEIGHT, 0xcd, std::nullopt, std::nullopt);
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH + 1, y * BOARD_CELL_HEIGHT + 2, 0xcd, std::nullopt, std::nullopt);
@@ -118,8 +124,19 @@ void RoomState::Draw()
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH + 2, y * BOARD_CELL_HEIGHT, 0xbb, std::nullopt, std::nullopt);
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH + 2, y * BOARD_CELL_HEIGHT + 2, 0xbc, std::nullopt, std::nullopt);
     _frameBuffer.SetCell(x * BOARD_CELL_WIDTH, y * BOARD_CELL_HEIGHT + 2, 0xc8, std::nullopt, std::nullopt);
-    //draw stats
+}
+void RoomState::DrawStats()
+{
+    auto avatar = *_world.GetAvatar();
+    auto board = avatar.GetBoard();
     size_t text_column = board.GetColumns() * BOARD_CELL_WIDTH;
+    _frameBuffer.Fill(
+        text_column,
+        size_t{0},
+        _frameBuffer.GetColumns()-text_column,
+        _frameBuffer.GetRows()-1,
+        0,
+        std::nullopt,FrameBufferCellColor::BLACK);
     size_t text_row = 0;
     _frameBuffer.WriteText(
         text_column, 
@@ -130,6 +147,89 @@ void RoomState::Draw()
             avatar.GetStatisticMaximum(StatisticType::SUPPLIES)), 
         FrameBufferCellColor::MAGENTA, 
         std::nullopt);
+    _frameBuffer.WriteText(
+        text_column, 
+        text_row++, 
+        std::format(
+            "Position: {}{}", 
+            (char)('A'+x),
+            (char)('1'+y)), 
+        FrameBufferCellColor::CYAN, 
+        std::nullopt);
+    auto location= *board.GetLocation(x,y);
+    if(IsValidMoveDestination(location))
+    {
+        _frameBuffer.WriteText(
+            text_column, 
+            text_row++, 
+            std::format(
+                "Valid Move"), 
+            FrameBufferCellColor::GREEN, 
+            std::nullopt);
+    }
+    auto character = location.GetCharacter();
+    if(character)
+    {
+        switch(character->GetCharacterType())
+        {
+            case CharacterType::BLOCK:
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "Blocked!"), 
+                    FrameBufferCellColor::RED, 
+                    std::nullopt);
+                break;
+            case CharacterType::BUTTHOLE:
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "Butthole"), 
+                    FrameBufferCellColor::BROWN, 
+                    std::nullopt);
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "(check it!)"), 
+                    FrameBufferCellColor::BROWN, 
+                    std::nullopt);
+                break;
+            case CharacterType::KNIGHT:
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "Knight(you)"), 
+                    FrameBufferCellColor::DARK_GRAY, 
+                    std::nullopt);
+                break;
+            case CharacterType::STICKY_BUNS:
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "+5 Buns"), 
+                    FrameBufferCellColor::WHITE, 
+                    std::nullopt);
+                break;
+            default:
+                //do nothing
+                break;
+        }
+    }
+}
+void RoomState::DrawStatusBar()
+{
+
+}
+void RoomState::Draw()
+{
+    DrawBoard();
+    DrawCursorFrame();
+    DrawStats();
 }
 
 std::optional<GameState> RoomState::Update()
