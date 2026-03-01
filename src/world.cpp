@@ -2,12 +2,13 @@
 #include "rng.h"
 #include "knightwalker.h"
 #include "statistictype.h"
+#include <ranges>
 Board World::InitializeBoard()
 {
     auto board = CreateBoard(BOARD_COLUMNS, BOARD_ROWS);
-    for(size_t column = 0; column < board.GetColumns(); ++column)
+    for(size_t column: std::views::iota(size_t{0}, board.GetColumns()))
     {
-        for(size_t row = 0; row < board.GetRows(); ++row)
+        for(size_t row: std::views::iota(size_t{0}, board.GetRows()))
         {
             board.SetLocation(column, row, CreateLocation(board, (column+row)%2==1));
         }
@@ -52,22 +53,20 @@ void World::PopulateBoard(Board board)
     avatar.SetStatisticMaximum(StatisticType::SUPPLIES, KNIGHT_INITIAL_SUPPLIES);
     avatar.SetStatistic(StatisticType::SUPPLIES, KNIGHT_INITIAL_SUPPLIES);
     SpawnCharacter(board, CharacterType::STICKY_BUNS);
+    SpawnCharacter(board, CharacterType::BUTTHOLE);
 }
 void World::Initialize()
 {
     _data.Clear();
-    auto board = InitializeBoard();
-    PopulateBoard(board);
+    PopulateBoard(InitializeBoard());
 }
 Board World::CreateBoard(size_t columns, size_t rows)
 {
-    size_t boardIndex = _data.CreateBoard(columns, rows);
-    return Board(_data, boardIndex);
+    return Board(_data, _data.CreateBoard(columns, rows));
 }
 Location World::CreateLocation(const Board& board, bool light)
 {
-    size_t locationIndex = _data.CreateLocation(board.GetIndex(), light);
-    return Location(_data, locationIndex);
+    return Location(_data, _data.CreateLocation(board.GetIndex(), light));
 }
 Character World::CreateCharacter(CharacterType characterType, Location location)
 {
@@ -89,8 +88,7 @@ void World::SetAvatar(std::optional<Character> avatar)
 }
 std::optional<Character> World::GetAvatar() const
 {
-    auto avatarIndex = _data.GetAvatarIndex();
-    if(avatarIndex)
+    if(auto avatarIndex = _data.GetAvatarIndex())
     {
         return Character(_data, *avatarIndex);
     }

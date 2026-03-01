@@ -4,8 +4,8 @@
 - [x] Convert keydown events into commands
 - [x] Represent board in a more "world data" manner.
 - [x] parity: generate board and move knight
-- [ ] minimum supplies = 0
-- [ ] sticky buns increase supplies
+- [x] minimum supplies = 0
+- [x] sticky buns increase supplies
 
 # The Project
 - [x] Chessboard (8x8).

@@ -13,6 +13,8 @@ private:
     void AttemptMove();
     void Move(Location fromLocation, Location toLocation);
     void RemoveBlocks();
+    void ConsumeStickyBuns(Character& character, Character& otherCharacter);
+    void CheckButthole(Character& character, Character& otherCharacter);
 public:
     RoomState(
         FrameBuffer& frameBuffer, 

@@ -9,6 +9,8 @@ static unsigned char GetBoardCellCharacter(const Location& location)
     {
         switch(character->GetCharacterType())
         {
+            case CharacterType::BUTTHOLE:
+                return '*';
             case CharacterType::STICKY_BUNS:
                 return '@';
             case CharacterType::KNIGHT:
@@ -182,9 +184,22 @@ void RoomState::AttemptMove()
         }
     }
 }
-void RoomState::Move(Location location, Location cursorLocation)
+void RoomState::ConsumeStickyBuns(Character& character, Character& otherCharacter)
 {
     constexpr int SUPPLIES_INCREASE = 5;
+    character.SetStatistic(StatisticType::SUPPLIES, *character.GetStatistic(StatisticType::SUPPLIES) + SUPPLIES_INCREASE);
+    auto board = character.GetBoard();
+    _world.SpawnCharacter(board, CharacterType::STICKY_BUNS);
+    otherCharacter.Recycle();
+}
+void RoomState::CheckButthole(Character& character, Character& otherCharacter)
+{
+    auto board = character.GetBoard();
+    _world.SpawnCharacter(board, CharacterType::BUTTHOLE);
+    otherCharacter.Recycle();
+}
+void RoomState::Move(Location location, Location cursorLocation)
+{
     RemoveBlocks();
     auto character = *location.GetCharacter();
     character.SetStatistic(StatisticType::SUPPLIES, *character.GetStatistic(StatisticType::SUPPLIES) - 1);
@@ -194,13 +209,18 @@ void RoomState::Move(Location location, Location cursorLocation)
     cursorLocation.SetCharacter(character);
     if(otherCharacter)
     {
-        if(otherCharacter->GetCharacterType() == CharacterType::STICKY_BUNS)
+        switch(otherCharacter->GetCharacterType())
         {
-            character.SetStatistic(StatisticType::SUPPLIES, *character.GetStatistic(StatisticType::SUPPLIES) + SUPPLIES_INCREASE);
-            auto board = character.GetBoard();
-            _world.SpawnCharacter(board, CharacterType::STICKY_BUNS);
+            case CharacterType::STICKY_BUNS:
+                ConsumeStickyBuns(character, *otherCharacter);
+                break;
+            case CharacterType::BUTTHOLE:
+                CheckButthole(character, *otherCharacter);
+                break;
+            default:
+                //do nothing!
+                break;
         }
-        otherCharacter->Recycle();
     }
 }
 void RoomState::RemoveBlocks()
