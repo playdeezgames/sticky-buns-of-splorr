@@ -6,6 +6,7 @@
 - [x] parity: generate board and move knight
 - [x] minimum supplies = 0
 - [x] sticky buns increase supplies
+- [ ] character/world messages
 - [ ] how to restart the game once dead?
 - [ ] butthole checking
   - [ ] nothing

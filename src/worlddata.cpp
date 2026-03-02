@@ -64,3 +64,23 @@ std::optional<size_t> WorldData::GetAvatarIndex() const
 {
     return _avatarIndex;
 }
+size_t WorldData::GetMessageCount() const
+{
+    return _messages.size();
+}
+MessageData& WorldData::GetMessage(size_t index)
+{
+    return _messages[index];
+}
+const MessageData& WorldData::GetMessage(size_t index) const
+{
+    return _messages[index];
+}
+void WorldData::ClearMessages()
+{
+    _messages.clear();
+}
+void WorldData::AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background)
+{
+    _messages.emplace_back(text, foreground, background);
+}

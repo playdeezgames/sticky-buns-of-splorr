@@ -3,6 +3,8 @@
 #include "knightwalker.h"
 #include "statistictype.h"
 #include <ranges>
+#include <algorithm>
+#include <iterator>
 Board World::InitializeBoard()
 {
     auto board = CreateBoard(BOARD_COLUMNS, BOARD_ROWS);
@@ -110,4 +112,23 @@ std::optional<Character> World::GetAvatar() const
         return Character(_data, *avatarIndex);
     }
     return std::nullopt;
+}
+std::vector<Message> World::GetMessages() const
+{
+    auto messageCount = _data.GetMessageCount();
+    std::vector<Message> result;
+    result.reserve(messageCount);
+    std::ranges::copy(
+        std::views::iota(size_t{0}, messageCount)
+        | std::views::transform([this](size_t index){return Message(_data, index);}),
+        std::back_inserter(result));
+    return result;
+}
+void World::AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background)
+{
+    _data.AddMessage(text, foreground, background);
+}
+void World::ClearMessages()
+{
+    _data.ClearMessages();
 }

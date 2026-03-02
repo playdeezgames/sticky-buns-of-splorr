@@ -3,6 +3,7 @@
 #include "board.h"
 #include "character.h"
 #include "charactertype.h"
+#include "message.h"
 class World
 {
 private:
@@ -21,4 +22,7 @@ public:
     Character CreateCharacter(CharacterType characterType, Location location);
     void SetAvatar(std::optional<Character> avatar);
     std::optional<Character> GetAvatar() const;
+    std::vector<Message> GetMessages() const;
+    void AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background);
+    void ClearMessages();
 };

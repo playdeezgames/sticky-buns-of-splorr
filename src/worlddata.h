@@ -4,6 +4,7 @@
 #include "boarddata.h"
 #include "locationdata.h"
 #include "characterdata.h"
+#include "messagedata.h"
 class WorldData
 {
 private:
@@ -12,6 +13,7 @@ private:
     std::vector<CharacterData> _characters;
     std::set<size_t> _recycledCharacters;
     std::optional<size_t> _avatarIndex;
+    std::vector<MessageData> _messages;
 public:
     void Clear();
     size_t CreateBoard(size_t columns, size_t rows);
@@ -26,4 +28,9 @@ public:
     void RecycleCharacter(size_t index);
     void SetAvatarIndex(std::optional<size_t> avatarIndex);
     std::optional<size_t> GetAvatarIndex() const;
+    size_t GetMessageCount() const;
+    MessageData& GetMessage(size_t index);
+    const MessageData& GetMessage(size_t index) const;
+    void ClearMessages();
+    void AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background);
 };

@@ -229,6 +229,15 @@ void RoomState::DrawStats()
                 break;
         }
     }
+    for(auto message: _world.GetMessages())
+    {
+        _frameBuffer.WriteText(
+            text_column, 
+            text_row++, 
+            message.GetText().data(), 
+            message.GetForeground(), 
+            message.GetBackground());
+    }
 }
 void RoomState::DrawStatusBar()
 {
@@ -256,15 +265,19 @@ bool RoomState::HandleCommand()
         {
             case CommandType::UP:
                 y = (y > 0) ? (y - 1) : (y);
+                _world.ClearMessages();
                 break;
             case CommandType::DOWN:
                 y = (y < World::BOARD_ROWS - 1) ? (y + 1) : (y);
+                _world.ClearMessages();
                 break;
             case CommandType::LEFT:
                 x = (x > 0) ? (x - 1) : (x);
+                _world.ClearMessages();
                 break;
             case CommandType::RIGHT:
                 x = (x < World::BOARD_COLUMNS - 1) ? (x + 1) : (x);
+                _world.ClearMessages();
                 break;
             case CommandType::GREEN:
                 AttemptMove();
@@ -285,13 +298,23 @@ void RoomState::AttemptMove()
     for(auto knightMoveType : AllKnightMoveTypes)
     {
         auto destination = location.GetNeighbor(knightMoveType);
-        if(
-            destination && 
-            !(destination->GetCharacter() && destination->GetCharacter()->GetCharacterType() == CharacterType::BLOCK) && 
-            destination->GetIndex() == cursorLocation.GetIndex() &&
-            avatar.GetStatistic(StatisticType::HEALTH) > 0)
+
+        if(destination && destination->GetIndex() == cursorLocation.GetIndex())
         {
-            Move(location, cursorLocation);
+            _world.ClearMessages();
+            auto otherCharacter = destination->GetCharacter();
+            if(avatar.GetStatistic(StatisticType::HEALTH) <= 0)
+            {
+                _world.AddMessage("Yer Dead!",FrameBufferCellColor::RED,FrameBufferCellColor::BLACK);
+            }
+            else if(otherCharacter && otherCharacter->GetCharacterType() == CharacterType::BLOCK)
+            {
+                _world.AddMessage("Blocked!",FrameBufferCellColor::BLACK,FrameBufferCellColor::RED);
+            }
+            else
+            {
+                Move(location, cursorLocation);
+            }
         }
     }
 }
