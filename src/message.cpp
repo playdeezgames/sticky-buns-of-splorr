@@ -1,5 +1,5 @@
 #include "message.h"
-const std::string_view& Message::GetText() const
+const std::string& Message::GetText() const
 {
     return GetMessageData().GetText();
 }

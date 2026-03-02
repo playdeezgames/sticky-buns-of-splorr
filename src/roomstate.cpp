@@ -321,6 +321,7 @@ void RoomState::AttemptMove()
 void RoomState::ConsumeStickyBuns(Character& character, Character& otherCharacter)
 {
     constexpr int SUPPLIES_INCREASE = 5;
+    _world.AddMessage(std::format("+{} Buns", SUPPLIES_INCREASE),FrameBufferCellColor::WHITE, FrameBufferCellColor::BLACK);
     character.SetStatistic(StatisticType::SUPPLIES, *character.GetStatistic(StatisticType::SUPPLIES) + SUPPLIES_INCREASE);
     auto board = character.GetBoard();
     _world.SpawnCharacter(board, CharacterType::STICKY_BUNS);
@@ -329,6 +330,7 @@ void RoomState::ConsumeStickyBuns(Character& character, Character& otherCharacte
 void RoomState::CheckButthole(Character& character, Character& otherCharacter)
 {
     auto board = character.GetBoard();
+    _world.AddMessage("Checking...",FrameBufferCellColor::BROWN, FrameBufferCellColor::BLACK);
     _world.SpawnCharacter(board, CharacterType::BUTTHOLE);
     otherCharacter.Recycle();
 }

@@ -23,6 +23,6 @@ public:
     void SetAvatar(std::optional<Character> avatar);
     std::optional<Character> GetAvatar() const;
     std::vector<Message> GetMessages() const;
-    void AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background);
+    void AddMessage(const std::string& text, FrameBufferCellColor foreground, FrameBufferCellColor background);
     void ClearMessages();
 };

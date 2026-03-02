@@ -124,7 +124,7 @@ std::vector<Message> World::GetMessages() const
         std::back_inserter(result));
     return result;
 }
-void World::AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background)
+void World::AddMessage(const std::string& text, FrameBufferCellColor foreground, FrameBufferCellColor background)
 {
     _data.AddMessage(text, foreground, background);
 }

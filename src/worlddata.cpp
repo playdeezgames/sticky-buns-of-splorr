@@ -80,7 +80,7 @@ void WorldData::ClearMessages()
 {
     _messages.clear();
 }
-void WorldData::AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background)
+void WorldData::AddMessage(const std::string& text, FrameBufferCellColor foreground, FrameBufferCellColor background)
 {
     _messages.emplace_back(text, foreground, background);
 }

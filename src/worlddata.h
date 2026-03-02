@@ -32,5 +32,5 @@ public:
     MessageData& GetMessage(size_t index);
     const MessageData& GetMessage(size_t index) const;
     void ClearMessages();
-    void AddMessage(const std::string_view& text, FrameBufferCellColor foreground, FrameBufferCellColor background);
+    void AddMessage(const std::string& text, FrameBufferCellColor foreground, FrameBufferCellColor background);
 };
