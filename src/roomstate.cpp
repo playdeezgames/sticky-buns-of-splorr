@@ -1,5 +1,6 @@
 #include "roomstate.h"
 #include <format>
+#include "rng.h"
 constexpr int BOARD_CELL_WIDTH = 3;
 constexpr int BOARD_CELL_HEIGHT = 3;
 static unsigned char GetBoardCellCharacter(const Location& location)
@@ -36,6 +37,8 @@ static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location
                 return FrameBufferCellColor::BLACK;
             case CharacterType::BLOCK:
                 return FrameBufferCellColor::BLACK;
+            case CharacterType::BUTTHOLE:
+                return FrameBufferCellColor::BROWN;
             default:
                 return FrameBufferCellColor::BLACK;
         }
@@ -155,6 +158,14 @@ void RoomState::DrawStats()
             *avatar.GetStatistic(StatisticType::HEALTH),
             avatar.GetStatisticMaximum(StatisticType::HEALTH)), 
         FrameBufferCellColor::LIGHT_RED, 
+        std::nullopt);
+    _frameBuffer.WriteText(
+        text_column, 
+        text_row++, 
+        std::format(
+            "Jools: {}", 
+            *avatar.GetStatistic(StatisticType::JOOLS)), 
+        FrameBufferCellColor::LIGHT_GREEN, 
         std::nullopt);
     _frameBuffer.WriteText(
         text_column, 
@@ -327,11 +338,37 @@ void RoomState::ConsumeStickyBuns(Character& character, Character& otherCharacte
     _world.SpawnCharacter(board, CharacterType::STICKY_BUNS);
     otherCharacter.Recycle();
 }
+enum class ButtholeCheckResult {NOTHING, JOOLS, TRAP, TELEPORT};
+static std::map<ButtholeCheckResult, size_t> buttholeResultGenerator =
+{
+    {ButtholeCheckResult::NOTHING, size_t{1}},
+    {ButtholeCheckResult::JOOLS, size_t{1}},
+    {ButtholeCheckResult::TRAP, size_t{1}},
+    {ButtholeCheckResult::TELEPORT, size_t{1}}
+};
 void RoomState::CheckButthole(Character& character, Character& otherCharacter)
 {
+    constexpr int TRAP_DAMAGE = 1;
     auto board = character.GetBoard();
     _world.AddMessage("Checking...",FrameBufferCellColor::BROWN, FrameBufferCellColor::BLACK);
     _world.SpawnCharacter(board, CharacterType::BUTTHOLE);
+    switch(RNG::FromGenerator(buttholeResultGenerator))
+    {
+    case ButtholeCheckResult::NOTHING:    
+        _world.AddMessage("Nothing!",FrameBufferCellColor::DARK_GRAY, FrameBufferCellColor::BLACK);
+        break;
+    case ButtholeCheckResult::JOOLS:        
+        _world.AddMessage("Jools!",FrameBufferCellColor::LIGHT_GREEN, FrameBufferCellColor::BLACK);
+        break;
+    case ButtholeCheckResult::TRAP:        
+        _world.AddMessage("Trap!",FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
+        _world.AddMessage(std::format("-{} Health", TRAP_DAMAGE),FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
+        _world.GetAvatar()->ChangeStatistic(StatisticType::HEALTH, -TRAP_DAMAGE);
+        break;
+    case ButtholeCheckResult::TELEPORT:
+        _world.AddMessage("Teleport!",FrameBufferCellColor::LIGHT_BLUE, FrameBufferCellColor::BLACK);
+        break;
+    }
     otherCharacter.Recycle();
 }
 void RoomState::Move(Location location, Location cursorLocation)

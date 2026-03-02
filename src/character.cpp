@@ -49,5 +49,10 @@ int Character::GetStatisticMaximum(StatisticType statisticType) const
 {
     return GetCharacterData().GetStatisticMaximum(statisticType);
 }
+void Character::ChangeStatistic(StatisticType statisticType, int delta)
+{
+    SetStatistic(statisticType, *GetStatistic(statisticType) + delta);
+}
+
 
 
