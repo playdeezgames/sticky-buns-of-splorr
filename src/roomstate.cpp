@@ -12,6 +12,8 @@ static unsigned char GetBoardCellCharacter(const Location& location)
         {
             case CharacterType::BUTTHOLE:
                 return '*';
+            case CharacterType::PAWN:
+                return 'p';
             case CharacterType::STICKY_BUNS:
                 return '@';
             case CharacterType::KNIGHT:
@@ -32,6 +34,8 @@ static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location
         switch(character->GetCharacterType())
         {
             case CharacterType::STICKY_BUNS:
+                return FrameBufferCellColor::WHITE;
+            case CharacterType::PAWN:
                 return FrameBufferCellColor::WHITE;
             case CharacterType::KNIGHT:
                 return FrameBufferCellColor::BLACK;
@@ -171,6 +175,23 @@ void RoomState::DrawStats()
         text_column, 
         text_row++, 
         std::format(
+            "XP: {}/{}", 
+            *avatar.GetStatistic(StatisticType::XP),
+            *avatar.GetStatistic(StatisticType::XP_GOAL)), 
+        FrameBufferCellColor::CYAN, 
+        std::nullopt);
+    _frameBuffer.WriteText(
+        text_column, 
+        text_row++, 
+        std::format(
+            "Level: {}", 
+            *avatar.GetStatistic(StatisticType::XP_LEVEL)), 
+        FrameBufferCellColor::LIGHT_CYAN, 
+        std::nullopt);
+    _frameBuffer.WriteText(
+        text_column, 
+        text_row++, 
+        std::format(
             "Jools: {}", 
             *avatar.GetStatistic(StatisticType::JOOLS)), 
         FrameBufferCellColor::LIGHT_GREEN, 
@@ -240,6 +261,15 @@ void RoomState::DrawStats()
                     text_row++, 
                     std::format(
                         "+5 Buns"), 
+                    FrameBufferCellColor::WHITE, 
+                    std::nullopt);
+                break;
+            case CharacterType::PAWN:
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "Pawn(enemy)"), 
                     FrameBufferCellColor::WHITE, 
                     std::nullopt);
                 break;
@@ -463,10 +493,46 @@ void RoomState::Move(Location location, Location cursorLocation)
             case CharacterType::BUTTHOLE:
                 CheckButthole(character, *otherCharacter);
                 break;
+            case CharacterType::PAWN:
+                AttackPawn(character);
+                break;
             default:
                 //do nothing!
                 break;
         }
+    }
+}
+void RoomState::AttackPawn(Character& character)
+{
+    if(character.GetStatistic(StatisticType::ARMOUR).value_or(0)>0)
+    {
+        character.ChangeStatistic(StatisticType::ARMOUR, -1);
+        _world.AddMessage("-1 Armour", FrameBufferCellColor::BLACK, FrameBufferCellColor::YELLOW);
+    }
+    else
+    {
+        character.ChangeStatistic(StatisticType::HEALTH, -1);
+        _world.AddMessage("-1 Health", FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
+    }
+    AddXP(1);
+    //TODO: count pawns, when 0, spawn bishop!
+}
+void RoomState::AddXP(int xp)
+{
+    auto avatar = *_world.GetAvatar();
+    avatar.ChangeStatistic(StatisticType::XP, xp);
+    _world.AddMessage(std::format("+{} XP", xp), FrameBufferCellColor::CYAN, FrameBufferCellColor::BLACK);
+    while(*avatar.GetStatistic(StatisticType::XP_GOAL) <= *avatar.GetStatistic(StatisticType::XP))
+    {
+        _world.AddMessage("+1 XP Level", FrameBufferCellColor::CYAN, FrameBufferCellColor::BLACK);
+        _world.AddMessage("+1 Max HP", FrameBufferCellColor::LIGHT_RED, FrameBufferCellColor::BLACK);
+        _world.AddMessage("+1 HP", FrameBufferCellColor::RED, FrameBufferCellColor::BLACK);
+        auto xpGoal = *avatar.GetStatistic(StatisticType::XP_GOAL);
+        avatar.ChangeStatistic(StatisticType::XP_LEVEL, 1);
+        avatar.ChangeStatistic(StatisticType::XP, -xpGoal);
+        avatar.ChangeStatistic(StatisticType::XP_GOAL, xpGoal);
+        avatar.SetStatisticMaximum(StatisticType::HEALTH, avatar.GetStatisticMaximum(StatisticType::HEALTH) + 1);
+        avatar.ChangeStatistic(StatisticType::HEALTH, 1);
     }
 }
 void RoomState::RemoveBlocks()

@@ -50,6 +50,7 @@ void World::PopulateBoard(Board board)
 {
     constexpr int KNIGHT_INITIAL_SUPPLIES = 15;
     constexpr int KNIGHT_INITIAL_HEALTH = 3;
+    constexpr int KNIGHT_INITIAL_ARMOUR = 5;
     auto avatar = SpawnCharacter(board, CharacterType::KNIGHT);
     SetAvatar(avatar);
     avatar.SetStatisticMinimum(StatisticType::SUPPLIES, 0);
@@ -70,11 +71,20 @@ void World::PopulateBoard(Board board)
     avatar.SetStatistic(StatisticType::XP, 0);
     avatar.SetStatisticMinimum(StatisticType::XP_LEVEL, 1);
     avatar.SetStatistic(StatisticType::XP_LEVEL, 1);
-    avatar.SetStatistic(StatisticType::XP_GOAL, 10);
+    avatar.SetStatistic(StatisticType::XP_GOAL, 5);
     avatar.SetStatisticMinimum(StatisticType::ARMOUR, 0);
-    avatar.SetStatistic(StatisticType::ARMOUR, 0);
+    avatar.SetStatistic(StatisticType::ARMOUR, KNIGHT_INITIAL_ARMOUR);
     SpawnCharacter(board, CharacterType::STICKY_BUNS);
     SpawnCharacter(board, CharacterType::BUTTHOLE);
+
+    SpawnCharacter(board, CharacterType::PAWN);
+    SpawnCharacter(board, CharacterType::PAWN);
+    SpawnCharacter(board, CharacterType::PAWN);
+    SpawnCharacter(board, CharacterType::PAWN);
+    SpawnCharacter(board, CharacterType::PAWN);
+    SpawnCharacter(board, CharacterType::PAWN);
+    SpawnCharacter(board, CharacterType::PAWN);
+    SpawnCharacter(board, CharacterType::PAWN);
 }
 void World::Initialize()
 {

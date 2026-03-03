@@ -24,7 +24,8 @@
 - [ ] spawn additional enemy countdown(inversely proportional to level?)
 - [ ] xp and xp levels(level up ++maxhp & full heal)
 - [ ] bishop takes a turn when you attack and don't defeat him?
-- [ ] pawns(8 pawns on the board. when they are defeated, the bishop is spawned?)
+- [x] pawns(8 pawns on the board. when they are defeated, the bishop is spawned?)
+- [ ] streak bonus(for killing multiple enemies/landing on things in sequential turns)
 
 # The Project
 - [x] Chessboard (8x8).

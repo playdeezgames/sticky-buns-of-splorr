@@ -15,6 +15,7 @@ private:
     void RemoveBlocks();
     void ConsumeStickyBuns(Character& character, Character& otherCharacter);
     void CheckButthole(Character& character, Character& otherCharacter);
+    void AttackPawn(Character& character);
     void DrawBoard();
     void DrawCursorFrame();
     void DrawStats();
@@ -24,6 +25,7 @@ private:
     void TriggerJools();
     void TriggerTeleport();
     void TriggerArmour();
+    void AddXP(int xp);
 public:
     RoomState(
         FrameBuffer& frameBuffer, 
