@@ -9,7 +9,7 @@ private:
     World& _world;
     size_t x;
     size_t y;
-    bool HandleCommand();
+    bool HandleCommand(GameState& gameState);
     void AttemptMove();
     void Move(Location fromLocation, Location toLocation);
     void RemoveBlocks();

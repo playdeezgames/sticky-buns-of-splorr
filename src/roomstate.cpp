@@ -302,22 +302,29 @@ void RoomState::DrawStats()
 }
 void RoomState::DrawStatusBar()
 {
-
+    _frameBuffer.WriteText(
+        0, 
+        _frameBuffer.GetRows() - 1, 
+        " WASD:navigate \xb3 SPACE:move \xb3 TAB:menu  ", 
+        FrameBufferCellColor::BLACK, 
+        FrameBufferCellColor::WHITE);
 }
 void RoomState::Draw()
 {
     DrawBoard();
     DrawCursorFrame();
     DrawStats();
+    DrawStatusBar();
 }
 
 std::optional<GameState> RoomState::Update()
 {
-    while(HandleCommand()){/* do nothing */}
-    return GameState::ROOM;
+    GameState gameState = GameState::ROOM;
+    while(HandleCommand(gameState) && gameState == GameState::ROOM){/* do nothing */}
+    return gameState;
 }
 
-bool RoomState::HandleCommand()
+bool RoomState::HandleCommand(GameState& gameState)
 {
     auto command = _commandBuffer.Read();
     if(command)
@@ -342,6 +349,9 @@ bool RoomState::HandleCommand()
                 break;
             case CommandType::GREEN:
                 AttemptMove();
+                break;
+            case CommandType::YELLOW:
+                gameState = GameState::GAME_MENU;
                 break;
             default:
                 //do nothing
@@ -517,10 +527,10 @@ void RoomState::Move(Location location, Location cursorLocation)
     else
     {
         auto streak = *character.GetStatistic(StatisticType::STREAK);
-        if(streak>0)
+        if(streak > 1)
         {
             _world.AddMessage("Streak Bonus!", FrameBufferCellColor::CYAN, FrameBufferCellColor::BLACK);
-            AddXP(streak);
+            AddXP(streak - 1);
         }
         character.SetStatistic(StatisticType::STREAK, 0);
     }
