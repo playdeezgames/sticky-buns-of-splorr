@@ -10,5 +10,6 @@ enum class StatisticType
     XP, 
     XP_LEVEL, 
     XP_GOAL,
-    ARMOUR
+    ARMOUR,
+    STREAK
 };

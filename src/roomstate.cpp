@@ -145,6 +145,18 @@ void RoomState::DrawStats()
         0,
         std::nullopt,FrameBufferCellColor::BLACK);
     size_t text_row = 0;
+    auto streak = *avatar.GetStatistic(StatisticType::STREAK);
+    if(streak > 0)
+    {
+        _frameBuffer.WriteText(
+            text_column, 
+            text_row++, 
+            std::format(
+                "Streak: {}", 
+                streak), 
+            FrameBufferCellColor::LIGHT_GREEN, 
+            std::nullopt);
+    }
     _frameBuffer.WriteText(
         text_column, 
         text_row++, 
@@ -485,6 +497,7 @@ void RoomState::Move(Location location, Location cursorLocation)
     cursorLocation.SetCharacter(character);
     if(otherCharacter)
     {
+        character.ChangeStatistic(StatisticType::STREAK, 1);
         switch(otherCharacter->GetCharacterType())
         {
             case CharacterType::STICKY_BUNS:
@@ -500,6 +513,16 @@ void RoomState::Move(Location location, Location cursorLocation)
                 //do nothing!
                 break;
         }
+    }
+    else
+    {
+        auto streak = *character.GetStatistic(StatisticType::STREAK);
+        if(streak>0)
+        {
+            _world.AddMessage("Streak Bonus!", FrameBufferCellColor::CYAN, FrameBufferCellColor::BLACK);
+            AddXP(streak);
+        }
+        character.SetStatistic(StatisticType::STREAK, 0);
     }
 }
 void RoomState::AttackPawn(Character& character)
