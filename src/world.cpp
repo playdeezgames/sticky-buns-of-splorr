@@ -71,6 +71,8 @@ void World::PopulateBoard(Board board)
     avatar.SetStatisticMinimum(StatisticType::XP_LEVEL, 1);
     avatar.SetStatistic(StatisticType::XP_LEVEL, 1);
     avatar.SetStatistic(StatisticType::XP_GOAL, 10);
+    avatar.SetStatisticMinimum(StatisticType::ARMOUR, 0);
+    avatar.SetStatistic(StatisticType::ARMOUR, 0);
     SpawnCharacter(board, CharacterType::STICKY_BUNS);
     SpawnCharacter(board, CharacterType::BUTTHOLE);
 }

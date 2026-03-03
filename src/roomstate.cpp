@@ -154,6 +154,14 @@ void RoomState::DrawStats()
         text_column, 
         text_row++, 
         std::format(
+            "Armour: {}", 
+            *avatar.GetStatistic(StatisticType::ARMOUR)), 
+        FrameBufferCellColor::YELLOW, 
+        std::nullopt);
+    _frameBuffer.WriteText(
+        text_column, 
+        text_row++, 
+        std::format(
             "Health: {}/{}", 
             *avatar.GetStatistic(StatisticType::HEALTH),
             avatar.GetStatisticMaximum(StatisticType::HEALTH)), 
@@ -338,13 +346,21 @@ void RoomState::ConsumeStickyBuns(Character& character, Character& otherCharacte
     _world.SpawnCharacter(board, CharacterType::STICKY_BUNS);
     otherCharacter.Recycle();
 }
-enum class ButtholeCheckResult {NOTHING, JOOLS, TRAP, TELEPORT};
+enum class ButtholeCheckResult 
+{
+    NOTHING, 
+    JOOLS, 
+    TRAP, 
+    TELEPORT,
+    ARMOUR
+};
 static std::map<ButtholeCheckResult, size_t> buttholeResultGenerator =
 {
-    {ButtholeCheckResult::NOTHING, size_t{1}},
-    {ButtholeCheckResult::JOOLS, size_t{1}},
-    {ButtholeCheckResult::TRAP, size_t{1}},
-    {ButtholeCheckResult::TELEPORT, size_t{1}}
+    {ButtholeCheckResult::NOTHING , size_t{ 1}},
+    {ButtholeCheckResult::JOOLS   , size_t{ 4}},
+    {ButtholeCheckResult::TRAP    , size_t{ 2}},
+    {ButtholeCheckResult::TELEPORT, size_t{ 1}},
+    {ButtholeCheckResult::ARMOUR  , size_t{ 4}}
 };
 void RoomState::CheckButthole(Character& character, Character& otherCharacter)
 {
@@ -365,8 +381,22 @@ void RoomState::CheckButthole(Character& character, Character& otherCharacter)
     case ButtholeCheckResult::TELEPORT:
         TriggerTeleport();
         break;
+    case ButtholeCheckResult::ARMOUR:
+        TriggerArmour();
+        break;
     }
     otherCharacter.Recycle();
+}
+void RoomState::TriggerArmour()
+{
+    constexpr int ARMOUR_BONUS = 1;
+    _world.AddMessage(
+        std::format("+{} Armour", ARMOUR_BONUS),
+        FrameBufferCellColor::YELLOW, 
+        FrameBufferCellColor::BLACK);
+    _world.GetAvatar()->ChangeStatistic(
+        StatisticType::ARMOUR, 
+        ARMOUR_BONUS);
 }
 void RoomState::TriggerTrap()
 {

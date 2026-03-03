@@ -23,6 +23,7 @@ private:
     void TriggerTrap();
     void TriggerJools();
     void TriggerTeleport();
+    void TriggerArmour();
 public:
     RoomState(
         FrameBuffer& frameBuffer, 
