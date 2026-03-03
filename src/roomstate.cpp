@@ -348,7 +348,6 @@ static std::map<ButtholeCheckResult, size_t> buttholeResultGenerator =
 };
 void RoomState::CheckButthole(Character& character, Character& otherCharacter)
 {
-    constexpr int TRAP_DAMAGE = 1;
     auto board = character.GetBoard();
     _world.AddMessage("Checking...",FrameBufferCellColor::BROWN, FrameBufferCellColor::BLACK);
     _world.SpawnCharacter(board, CharacterType::BUTTHOLE);
@@ -357,19 +356,55 @@ void RoomState::CheckButthole(Character& character, Character& otherCharacter)
     case ButtholeCheckResult::NOTHING:    
         _world.AddMessage("Nothing!",FrameBufferCellColor::DARK_GRAY, FrameBufferCellColor::BLACK);
         break;
-    case ButtholeCheckResult::JOOLS:        
-        _world.AddMessage("Jools!",FrameBufferCellColor::LIGHT_GREEN, FrameBufferCellColor::BLACK);
+    case ButtholeCheckResult::JOOLS:   
+        TriggerJools();     
         break;
-    case ButtholeCheckResult::TRAP:        
-        _world.AddMessage("Trap!",FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
-        _world.AddMessage(std::format("-{} Health", TRAP_DAMAGE),FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
-        _world.GetAvatar()->ChangeStatistic(StatisticType::HEALTH, -TRAP_DAMAGE);
+    case ButtholeCheckResult::TRAP:  
+        TriggerTrap();      
         break;
     case ButtholeCheckResult::TELEPORT:
-        _world.AddMessage("Teleport!",FrameBufferCellColor::LIGHT_BLUE, FrameBufferCellColor::BLACK);
+        TriggerTeleport();
         break;
     }
     otherCharacter.Recycle();
+}
+void RoomState::TriggerTrap()
+{
+    constexpr int TRAP_DAMAGE = 1;
+    _world.AddMessage("Trap!",FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
+    _world.AddMessage(std::format("-{} Health", TRAP_DAMAGE),FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
+    _world.GetAvatar()->ChangeStatistic(StatisticType::HEALTH, -TRAP_DAMAGE);
+}
+static std::map<int, size_t> joolsGenerator=
+{
+    {5,size_t{1}},
+    {6,size_t{2}},
+    {7,size_t{3}},
+    {8,size_t{2}},
+    {9,size_t{1}}
+};
+void RoomState::TriggerJools()
+{
+    auto jools = RNG::FromGenerator(joolsGenerator);
+    _world.AddMessage(std::format("+{} Jools", jools),FrameBufferCellColor::LIGHT_GREEN, FrameBufferCellColor::BLACK);
+    _world.GetAvatar()->ChangeStatistic(StatisticType::JOOLS, jools);
+}
+void RoomState::TriggerTeleport()
+{
+    _world.AddMessage("Teleport!",FrameBufferCellColor::LIGHT_BLUE, FrameBufferCellColor::BLACK);
+    auto avatar = _world.GetAvatar();
+    auto board = avatar->GetBoard();
+    size_t column;
+    size_t row;
+    do
+    {
+        column = RNG::FromRange(size_t{0}, board.GetColumns() - 1);
+        row = RNG::FromRange(size_t{0}, board.GetRows() - 1);
+    } while (board.GetLocation(column, row)->GetCharacter());
+    auto location = board.GetLocation(column, row);
+    avatar->GetLocation().SetCharacter(std::nullopt);
+    location->SetCharacter(avatar);
+    avatar->SetLocation(*location);
 }
 void RoomState::Move(Location location, Location cursorLocation)
 {

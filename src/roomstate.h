@@ -20,6 +20,9 @@ private:
     void DrawStats();
     void DrawStatusBar();
     static bool IsValidMoveDestination(Location location);
+    void TriggerTrap();
+    void TriggerJools();
+    void TriggerTeleport();
 public:
     RoomState(
         FrameBuffer& frameBuffer, 
