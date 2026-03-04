@@ -12,6 +12,7 @@ public:
     BoardData(size_t columns, size_t rows);
     void SetLocationIndex(size_t column, size_t row, std::optional<size_t> locationIndex);
     std::optional<size_t> GetLocationIndex(size_t column, size_t row) const;
+    const std::vector<std::optional<size_t>>& GetLocationIndices() const{return _locationIndices;}
     size_t GetColumns() const {return _columns;}
     size_t GetRows() const {return _rows;}
 };

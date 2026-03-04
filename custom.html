@@ -36,11 +36,12 @@ canvas.emscripten { border: 0px none; background-color: black; }
   </head>
   <body>
     <div class="emscripten_border">
-      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
     </div>
 
     <script type='text/javascript'>
       var canvasElement = document.getElementById('canvas');
+      canvasElement.focus();
       canvasElement.addEventListener('webglcontextlost', (e) => {
         alert('WebGL context lost. You will need to reload the page.');
         e.preventDefault();

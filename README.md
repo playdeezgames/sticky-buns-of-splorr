@@ -13,10 +13,10 @@
   - [x] jools
   - [x] trap
   - [ ] flogger
-  - [ ] armor
+  - [x] armor
   - [ ] potion
 - [ ] flogger(weapon)
-- [ ] armor
+- [x] armor
 - [ ] bishop
 - [ ] shoppe
 - [ ] potion

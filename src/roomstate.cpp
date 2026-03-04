@@ -12,6 +12,8 @@ static unsigned char GetBoardCellCharacter(const Location& location)
         {
             case CharacterType::BUTTHOLE:
                 return '*';
+            case CharacterType::BISHOP:
+                return 'B';
             case CharacterType::PAWN:
                 return 'p';
             case CharacterType::STICKY_BUNS:
@@ -36,6 +38,7 @@ static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location
             case CharacterType::STICKY_BUNS:
                 return FrameBufferCellColor::WHITE;
             case CharacterType::PAWN:
+            case CharacterType::BISHOP:
                 return FrameBufferCellColor::WHITE;
             case CharacterType::KNIGHT:
                 return FrameBufferCellColor::BLACK;
@@ -517,7 +520,10 @@ void RoomState::Move(Location location, Location cursorLocation)
                 CheckButthole(character, *otherCharacter);
                 break;
             case CharacterType::PAWN:
-                AttackPawn(character);
+                AttackPawn();
+                break;
+            case CharacterType::BISHOP:
+                AttackBishop();
                 break;
             default:
                 //do nothing!
@@ -535,20 +541,53 @@ void RoomState::Move(Location location, Location cursorLocation)
         character.SetStatistic(StatisticType::STREAK, 0);
     }
 }
-void RoomState::AttackPawn(Character& character)
+void RoomState::DamageAvatar(int damage)
 {
-    if(character.GetStatistic(StatisticType::ARMOUR).value_or(0)>0)
+    auto character = *_world.GetAvatar();
+    auto armour = character.GetStatistic(StatisticType::ARMOUR).value_or(0);
+    if(damage > 0 && armour > 0)
     {
-        character.ChangeStatistic(StatisticType::ARMOUR, -1);
-        _world.AddMessage("-1 Armour", FrameBufferCellColor::BLACK, FrameBufferCellColor::YELLOW);
+        auto absorption = std::min(damage, armour);
+        character.ChangeStatistic(StatisticType::ARMOUR, -absorption);
+        _world.AddMessage(std::format("-{} Armour", absorption), FrameBufferCellColor::BLACK, FrameBufferCellColor::YELLOW);
+        damage -= absorption;
     }
-    else
+    if(damage > 0)
     {
-        character.ChangeStatistic(StatisticType::HEALTH, -1);
-        _world.AddMessage("-1 Health", FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
+        character.ChangeStatistic(StatisticType::HEALTH, -damage);
+        _world.AddMessage(std::format("-{} Health", damage), FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
     }
+}
+void RoomState::AttackPawn()
+{
+    DamageAvatar(1);
     AddXP(1);
-    //TODO: count pawns, when 0, spawn bishop!
+    auto board = _world.GetAvatar()->GetBoard();
+    if(
+        !board.HasCharacterType(CharacterType::PAWN) &&
+        !board.HasCharacterType(CharacterType::BISHOP))
+    {
+        _world.SpawnCharacter(board, CharacterType::BISHOP);
+    }
+}
+void RoomState::AttackBishop()
+{
+    DamageAvatar(3);
+    AddXP(3);
+    auto board = _world.GetAvatar()->GetBoard();
+    if(
+        !board.HasCharacterType(CharacterType::PAWN) &&
+        !board.HasCharacterType(CharacterType::BISHOP))
+    {
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+        _world.SpawnCharacter(board, CharacterType::PAWN);
+    }
 }
 void RoomState::AddXP(int xp)
 {

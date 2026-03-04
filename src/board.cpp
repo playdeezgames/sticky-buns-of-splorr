@@ -1,4 +1,5 @@
 #include "board.h"
+#include <algorithm>
 BoardData& Board::GetBoardData()
 {
     return _data.GetBoard(_index);
@@ -34,4 +35,20 @@ size_t Board::GetColumns() const
 size_t Board::GetRows() const
 {
     return GetBoardData().GetRows();
+}
+bool Board::HasCharacterType(CharacterType characterType) const
+{
+    auto indices = GetBoardData().GetLocationIndices();
+    for(auto index : indices)
+    {
+        if(index)
+        {
+            auto character = Location(_data, *index).GetCharacter();
+            if(character.has_value() && character->GetCharacterType() == characterType)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }

@@ -16,4 +16,5 @@ public:
     size_t GetIndex() const {return _index;}
     size_t GetColumns() const;
     size_t GetRows() const;
+    bool HasCharacterType(CharacterType characterType) const;
 };

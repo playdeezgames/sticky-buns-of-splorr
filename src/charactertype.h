@@ -5,5 +5,6 @@ enum class CharacterType
     BLOCK, 
     STICKY_BUNS, 
     BUTTHOLE,
-    PAWN
+    PAWN,
+    BISHOP
 };
