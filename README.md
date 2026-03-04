@@ -17,15 +17,16 @@
   - [ ] potion
 - [ ] flogger(weapon)
 - [x] armor
-- [ ] bishop
+- [x] bishop
 - [ ] shoppe
 - [ ] potion
 - [ ] +max supplies
-- [ ] spawn additional enemy countdown(inversely proportional to level?)
-- [ ] xp and xp levels(level up ++maxhp & full heal)
+- [x] spawn additional enemy countdown(inversely proportional to level?)
+- [x] xp and xp levels(level up ++maxhp & full heal)
 - [ ] bishop takes a turn when you attack and don't defeat him?
 - [x] pawns(8 pawns on the board. when they are defeated, the bishop is spawned?)
-- [ ] streak bonus(for killing multiple enemies/landing on things in sequential turns)
+- [x] streak bonus(for killing multiple enemies/landing on things in sequential turns)
+- [ ] bomb. destroys everything in a rook pattern?
 
   
 
