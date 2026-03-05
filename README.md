@@ -7,7 +7,7 @@
 - [x] minimum supplies = 0
 - [x] sticky buns increase supplies
 - [x] character/world messages
-- [ ] how to restart the game once dead?
+- [x] how to restart the game once dead?
 - [ ] butthole checking
   - [x] nothing
   - [x] jools

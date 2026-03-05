@@ -1,12 +1,28 @@
 #pragma once
 #include "state.h"
 #include "world.h"
+#include <vector>
+#include <tuple>
+#include <string>
+enum class GameMenuStateItem 
+{
+    CONTINUE,
+    RESTART
+};
 class GameMenuState: public State
 {
 private:
-    GameMenuState();
     World& _world;
+    std::vector<std::tuple<GameMenuStateItem, std::string>> _menuItems;
+    size_t _menuItemIndex;
+    GameMenuState();
     bool HandleCommand(GameState& gameState);
+    void InitializeMenuItems();
+    void PreviousMenuItem();
+    void NextMenuItem();
+    void ChooseMenuItem(GameState& gameState);
+    void ContinueGame(GameState& gameState);
+    void RestartGame(GameState& gameState);
 public:
     GameMenuState(
         FrameBuffer& frameBuffer, 
@@ -14,6 +30,8 @@ public:
         World& world)
         : State(frameBuffer, commandBuffer)
         , _world(world)
+        , _menuItems()
+        , _menuItemIndex(0)
         {
 
         }
