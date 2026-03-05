@@ -26,6 +26,8 @@ private:
     void TriggerJools();
     void TriggerTeleport();
     void TriggerArmour();
+    void TriggerFlogger();
+    void TriggerPotion();
     void AddXP(int xp);
     void DamageAvatar(int damage);
 public:

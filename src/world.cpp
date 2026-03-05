@@ -65,6 +65,8 @@ void World::PopulateBoard(Board board)
     avatar.SetStatistic(StatisticType::DEFEND, 0);
     avatar.SetStatisticMinimum(StatisticType::POTIONS, 0);
     avatar.SetStatistic(StatisticType::POTIONS, 0);
+    avatar.SetStatisticMinimum(StatisticType::FLOGGERS, 0);
+    avatar.SetStatistic(StatisticType::FLOGGERS, 0);
     avatar.SetStatisticMinimum(StatisticType::JOOLS, 0);
     avatar.SetStatistic(StatisticType::JOOLS, 0);
     avatar.SetStatisticMinimum(StatisticType::XP, 0);

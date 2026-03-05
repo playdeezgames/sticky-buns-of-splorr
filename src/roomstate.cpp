@@ -10,6 +10,10 @@ static unsigned char GetBoardCellCharacter(const Location& location)
     {
         switch(character->GetCharacterType())
         {
+            case CharacterType::FLOGGER:
+                return '!';
+            case CharacterType::POTION:
+                return '&';
             case CharacterType::BUTTHOLE:
                 return '*';
             case CharacterType::BISHOP:
@@ -35,6 +39,10 @@ static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location
     {
         switch(character->GetCharacterType())
         {
+            case CharacterType::FLOGGER:
+                return FrameBufferCellColor::DARK_GRAY;
+            case CharacterType::POTION:
+                return FrameBufferCellColor::LIGHT_RED;
             case CharacterType::STICKY_BUNS:
                 return FrameBufferCellColor::WHITE;
             case CharacterType::PAWN:
@@ -177,6 +185,30 @@ void RoomState::DrawStats()
             *avatar.GetStatistic(StatisticType::ARMOUR)), 
         FrameBufferCellColor::YELLOW, 
         std::nullopt);
+    auto floggers = *avatar.GetStatistic(StatisticType::FLOGGERS);
+    if(floggers>0)
+    {
+        _frameBuffer.WriteText(
+            text_column, 
+            text_row++, 
+            std::format(
+                "Floggers: {}", 
+                floggers), 
+            FrameBufferCellColor::DARK_GRAY, 
+            std::nullopt);
+    }
+    auto potions = *avatar.GetStatistic(StatisticType::POTIONS);
+    if(potions>0)
+    {
+        _frameBuffer.WriteText(
+            text_column, 
+            text_row++, 
+            std::format(
+                "Potions: {}", 
+                potions), 
+            FrameBufferCellColor::RED,
+            std::nullopt);
+    }
     _frameBuffer.WriteText(
         text_column, 
         text_row++, 
@@ -407,15 +439,19 @@ enum class ButtholeCheckResult
     JOOLS, 
     TRAP, 
     TELEPORT,
-    ARMOUR
+    ARMOUR,
+    FLOGGER,
+    POTION
 };
 static std::map<ButtholeCheckResult, size_t> buttholeResultGenerator =
 {
-    {ButtholeCheckResult::NOTHING , size_t{ 1}},
-    {ButtholeCheckResult::JOOLS   , size_t{ 4}},
-    {ButtholeCheckResult::TRAP    , size_t{ 2}},
-    {ButtholeCheckResult::TELEPORT, size_t{ 1}},
-    {ButtholeCheckResult::ARMOUR  , size_t{ 4}}
+    {ButtholeCheckResult::NOTHING , size_t{ 10}},
+    {ButtholeCheckResult::JOOLS   , size_t{ 40}},
+    {ButtholeCheckResult::TRAP    , size_t{ 20}},
+    {ButtholeCheckResult::TELEPORT, size_t{ 10}},
+    {ButtholeCheckResult::ARMOUR  , size_t{ 40}},
+    {ButtholeCheckResult::FLOGGER , size_t{  5}},
+    {ButtholeCheckResult::POTION  , size_t{ 10}}
 };
 void RoomState::CheckButthole(Character& character, Character& otherCharacter)
 {
@@ -439,8 +475,36 @@ void RoomState::CheckButthole(Character& character, Character& otherCharacter)
     case ButtholeCheckResult::ARMOUR:
         TriggerArmour();
         break;
+    case ButtholeCheckResult::FLOGGER:
+        TriggerFlogger();
+        break;
+    case ButtholeCheckResult::POTION:
+        TriggerPotion();
+        break;
     }
     otherCharacter.Recycle();
+}
+void RoomState::TriggerFlogger()
+{
+    constexpr int FLOGGER_BONUS = 1;
+    _world.AddMessage(
+        std::format("+{} Floggers", FLOGGER_BONUS),
+        FrameBufferCellColor::DARK_GRAY, 
+        FrameBufferCellColor::BLACK);
+    _world.GetAvatar()->ChangeStatistic(
+        StatisticType::FLOGGERS, 
+        FLOGGER_BONUS);
+}
+void RoomState::TriggerPotion()
+{
+    constexpr int POTION_BONUS = 1;
+    _world.AddMessage(
+        std::format("+{} Potion", POTION_BONUS),
+        FrameBufferCellColor::RED, 
+        FrameBufferCellColor::BLACK);
+    _world.GetAvatar()->ChangeStatistic(
+        StatisticType::POTIONS, 
+        POTION_BONUS);
 }
 void RoomState::TriggerArmour()
 {

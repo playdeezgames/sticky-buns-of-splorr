@@ -6,5 +6,7 @@ enum class CharacterType
     STICKY_BUNS, 
     BUTTHOLE,
     PAWN,
-    BISHOP
+    BISHOP,
+    FLOGGER,
+    POTION
 };
