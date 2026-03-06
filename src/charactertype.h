@@ -8,5 +8,6 @@ enum class CharacterType
     PAWN,
     BISHOP,
     FLOGGER,
-    POTION
+    POTION,
+    SHOPPE
 };

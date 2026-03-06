@@ -10,6 +10,8 @@ static unsigned char GetBoardCellCharacter(const Location& location)
     {
         switch(character->GetCharacterType())
         {
+            case CharacterType::SHOPPE:
+                return '\x9c';
             case CharacterType::FLOGGER:
                 return '!';
             case CharacterType::POTION:
@@ -39,6 +41,8 @@ static FrameBufferCellColor GetBoardCellForegroundColor(const Location& location
     {
         switch(character->GetCharacterType())
         {
+            case CharacterType::SHOPPE:
+                return FrameBufferCellColor::LIGHT_GREEN;
             case CharacterType::FLOGGER:
                 return FrameBufferCellColor::DARK_GRAY;
             case CharacterType::POTION:
@@ -632,6 +636,10 @@ void RoomState::AttackPawn()
         !board.HasCharacterType(CharacterType::BISHOP))
     {
         _world.SpawnCharacter(board, CharacterType::BISHOP);
+        if(!board.HasCharacterType(CharacterType::SHOPPE))
+        {
+            _world.SpawnCharacter(board, CharacterType::SHOPPE);
+        }
     }
 }
 void RoomState::AttackBishop()

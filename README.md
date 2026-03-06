@@ -8,25 +8,28 @@
 - [x] sticky buns increase supplies
 - [x] character/world messages
 - [x] how to restart the game once dead?
-- [ ] butthole checking
+- [x] butthole checking
   - [x] nothing
   - [x] jools
   - [x] trap
-  - [ ] flogger
+  - [x] flogger
   - [x] armor
-  - [ ] potion
-- [ ] flogger(weapon)
+  - [x] potion
+- [x] flogger(weapon)
 - [x] armor
 - [x] bishop
 - [ ] shoppe
-- [ ] potion
-- [ ] +max supplies
+  - [ ] +max supplies(costs current max supplies * level)
+  - [ ] potion(cost 5 * level)
+  - [ ] floggers(cost 10 * level)
+  - [ ] anti-trap spray(costs 1 * level)
+  - [ ] armor(costs (current armor + 1) * level)
+- [ ] anti-trap spray: nullifies a trap in a butthole
+- [x] potion
 - [x] spawn additional enemy countdown(inversely proportional to level?)
 - [x] xp and xp levels(level up ++maxhp & full heal)
-- [ ] bishop takes a turn when you attack and don't defeat him?
 - [x] pawns(8 pawns on the board. when they are defeated, the bishop is spawned?)
 - [x] streak bonus(for killing multiple enemies/landing on things in sequential turns)
-- [ ] bomb. destroys everything in a rook pattern?
 
   
 
