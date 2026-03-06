@@ -636,9 +636,20 @@ void RoomState::AttackPawn()
 }
 void RoomState::AttackBishop()
 {
-    DamageAvatar(3);
-    AddXP(3);
-    auto board = _world.GetAvatar()->GetBoard();
+    auto avatar = *_world.GetAvatar();
+    if(avatar.GetStatistic(StatisticType::FLOGGERS).value_or(0) > 0)
+    {
+        avatar.ChangeStatistic(StatisticType::FLOGGERS,-1);
+        _world.AddMessage("BISHOP FLOGGED!", FrameBufferCellColor::BLACK, FrameBufferCellColor::DARK_GRAY);
+        _world.AddMessage("-1 Flogger", FrameBufferCellColor::DARK_GRAY, FrameBufferCellColor::BLACK);
+        AddXP(5);
+    }
+    else
+    {
+        DamageAvatar(3);
+        AddXP(3);
+    }
+    auto board = avatar.GetBoard();
     if(
         !board.HasCharacterType(CharacterType::PAWN) &&
         !board.HasCharacterType(CharacterType::BISHOP))
