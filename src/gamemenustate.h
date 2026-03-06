@@ -7,7 +7,8 @@
 enum class GameMenuStateItem 
 {
     CONTINUE,
-    RESTART
+    RESTART,
+    USE_POTION
 };
 class GameMenuState: public State
 {
@@ -23,6 +24,7 @@ private:
     void ChooseMenuItem(GameState& gameState);
     void ContinueGame(GameState& gameState);
     void RestartGame(GameState& gameState);
+    void UsePotion(GameState& gameState);
 public:
     GameMenuState(
         FrameBuffer& frameBuffer, 
