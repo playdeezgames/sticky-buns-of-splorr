@@ -2,6 +2,7 @@
 #include <string>
 #include "roomstate.h"
 #include "gamemenustate.h"
+#include "shoppestate.h"
 #include <ranges>
 #include <SDL2/SDL_image.h>
 #include <cstdlib>
@@ -85,6 +86,7 @@ void Application::Initialize()
 
     states.emplace(GameState::ROOM, std::make_unique<RoomState>(frameBuffer, commandBuffer, world));
     states.emplace(GameState::GAME_MENU, std::make_unique<GameMenuState>(frameBuffer, commandBuffer, world));
+    states.emplace(GameState::SHOPPE, std::make_unique<ShoppeState>(frameBuffer, commandBuffer, world));
 }
 void Application::Loop()
 {

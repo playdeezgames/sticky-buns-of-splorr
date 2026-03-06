@@ -10,11 +10,12 @@ private:
     size_t x;
     size_t y;
     bool HandleCommand(GameState& gameState);
-    void AttemptMove();
-    void Move(Location fromLocation, Location toLocation);
+    void AttemptMove(GameState& gameState);
+    void Move(GameState& gameState, Location fromLocation, Location toLocation);
     void RemoveBlocks();
     void ConsumeStickyBuns(Character& character, Character& otherCharacter);
     void CheckButthole(Character& character, Character& otherCharacter);
+    void EnterShoppe(GameState& gameState);
     void AttackPawn();
     void AttackBishop();
     void DrawBoard();

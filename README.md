@@ -19,6 +19,7 @@
 - [x] armor
 - [x] bishop
 - [ ] shoppe
+  - [ ] show current stat levels to aid in choice making
   - [ ] +max supplies(costs current max supplies * level)
   - [ ] potion(cost 5 * level)
   - [ ] floggers(cost 10 * level)

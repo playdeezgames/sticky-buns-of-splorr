@@ -324,6 +324,24 @@ void RoomState::DrawStats()
                     FrameBufferCellColor::WHITE, 
                     std::nullopt);
                 break;
+            case CharacterType::BISHOP:
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "Bishop(elite)"), 
+                    FrameBufferCellColor::WHITE, 
+                    std::nullopt);
+                break;
+            case CharacterType::SHOPPE:
+                _frameBuffer.WriteText(
+                    text_column, 
+                    text_row++, 
+                    std::format(
+                        "Shoppe"), 
+                    FrameBufferCellColor::LIGHT_GREEN, 
+                    std::nullopt);
+                break;
             default:
                 //do nothing
                 break;
@@ -387,7 +405,7 @@ bool RoomState::HandleCommand(GameState& gameState)
                 _world.ClearMessages();
                 break;
             case CommandType::GREEN:
-                AttemptMove();
+                AttemptMove(gameState);
                 break;
             case CommandType::YELLOW:
                 gameState = GameState::GAME_MENU;
@@ -400,7 +418,7 @@ bool RoomState::HandleCommand(GameState& gameState)
     }
     return false;
 }
-void RoomState::AttemptMove()
+void RoomState::AttemptMove(GameState& gameState)
 {
     auto avatar = *_world.GetAvatar();
     auto location = avatar.GetLocation();
@@ -423,7 +441,7 @@ void RoomState::AttemptMove()
             }
             else
             {
-                Move(location, cursorLocation);
+                Move(gameState, location, cursorLocation);
             }
         }
     }
@@ -559,7 +577,11 @@ void RoomState::TriggerTeleport()
     location->SetCharacter(avatar);
     avatar->SetLocation(*location);
 }
-void RoomState::Move(Location location, Location cursorLocation)
+void RoomState::EnterShoppe(GameState& gameState)
+{
+    gameState = GameState::SHOPPE;
+}
+void RoomState::Move(GameState& gameState, Location location, Location cursorLocation)
 {
     RemoveBlocks();
     auto character = *location.GetCharacter();
@@ -592,6 +614,9 @@ void RoomState::Move(Location location, Location cursorLocation)
                 break;
             case CharacterType::BISHOP:
                 AttackBishop();
+                break;
+            case CharacterType::SHOPPE:
+                EnterShoppe(gameState);
                 break;
             default:
                 //do nothing!

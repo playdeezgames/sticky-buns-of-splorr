@@ -2,5 +2,6 @@
 enum class GameState 
 { 
     ROOM,
-    GAME_MENU
+    GAME_MENU,
+    SHOPPE
 };
