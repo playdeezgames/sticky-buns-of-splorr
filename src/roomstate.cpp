@@ -189,6 +189,18 @@ void RoomState::DrawStats()
             *avatar.GetStatistic(StatisticType::ARMOUR)), 
         FrameBufferCellColor::YELLOW, 
         std::nullopt);
+    auto sprays = *avatar.GetStatistic(StatisticType::ANTITRAP_SPRAY);
+    if(sprays>0)
+    {
+        _frameBuffer.WriteText(
+            text_column, 
+            text_row++, 
+            std::format(
+                "Sprays: {}", 
+                sprays), 
+            FrameBufferCellColor::LIGHT_BLUE, 
+            std::nullopt);
+    }
     auto floggers = *avatar.GetStatistic(StatisticType::FLOGGERS);
     if(floggers>0)
     {

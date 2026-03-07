@@ -44,7 +44,7 @@ int ShoppeState::FloggerPrice() const
     auto avatar = *_world.GetAvatar();
     return BASE_PRICE * avatar.GetStatistic(StatisticType::XP_LEVEL).value();
 }
-int ShoppeState::ArmorPrice() const
+int ShoppeState::ArmourPrice() const
 {
     auto avatar = *_world.GetAvatar();
     return (1+avatar.GetStatistic(StatisticType::ARMOUR).value_or(0)) * avatar.GetStatistic(StatisticType::XP_LEVEL).value();
@@ -69,6 +69,26 @@ void ShoppeState::InitializeMenuItems()
     {
         _menuItems.emplace_back(ShoppeMenuStateItem::INCREASE_MAXIMUM_SUPPLIES, std::format("+1 Maximum Buns({})",price));
     }
+    price = PotionPrice();
+    if(jools >= price)
+    {
+        _menuItems.emplace_back(ShoppeMenuStateItem::BUY_POTION, std::format("+1 Potion({})",price));
+    }
+    price = ArmourPrice();
+    if(jools >= price)
+    {
+        _menuItems.emplace_back(ShoppeMenuStateItem::BUY_ARMOUR, std::format("+1 Armour({})",price));
+    }
+    price = FloggerPrice();
+    if(jools >= price)
+    {
+        _menuItems.emplace_back(ShoppeMenuStateItem::BUY_FLOGGER, std::format("+1 Flogger({})",price));
+    }
+    price = SprayPrice();
+    if(jools >= price)
+    {
+        _menuItems.emplace_back(ShoppeMenuStateItem::BUY_ANTITRAP_SPRAY, std::format("+1 Anti-trap Spray({})",price));
+    }
     _menuItemIndex = 0;
 }
 void ShoppeState::PreviousMenuItem()
@@ -91,16 +111,16 @@ void ShoppeState::ChooseMenuItem(GameState& gameState)
             IncreaseMaximumSupplies();
             break;
         case ShoppeMenuStateItem::BUY_ANTITRAP_SPRAY:
-            BuyAntitrapSpray(gameState);
+            BuyAntitrapSpray();
             break;
         case ShoppeMenuStateItem::BUY_ARMOUR:
-            BuyArmor(gameState);
+            BuyArmor();
             break;
         case ShoppeMenuStateItem::BUY_FLOGGER:
-            BuyFlogger(gameState);
+            BuyFlogger();
             break;
         case ShoppeMenuStateItem::BUY_POTION:
-            BuyPotion(gameState);
+            BuyPotion();
             break;
         default:
             break;
@@ -112,25 +132,38 @@ void ShoppeState::Leave(GameState& gameState)
 }
 void ShoppeState::IncreaseMaximumSupplies()
 {
-    _world.GetAvatar()->ChangeStatistic(StatisticType::JOOLS, -SupplyIncreasePrice());
-    //TODO: actually increase max supplies
+    auto avatar = *_world.GetAvatar();
+    avatar.ChangeStatistic(StatisticType::JOOLS, -SupplyIncreasePrice());
+    avatar.SetStatisticMaximum(StatisticType::SUPPLIES, avatar.GetStatisticMaximum(StatisticType::SUPPLIES) + 1);
     _menuItems.clear();
 }
-void ShoppeState::BuyPotion(GameState& gameState)
+void ShoppeState::BuyPotion()
 {
-
+    auto avatar = *_world.GetAvatar();
+    avatar.ChangeStatistic(StatisticType::JOOLS, -PotionPrice());
+    avatar.ChangeStatistic(StatisticType::POTIONS, 1);
+    _menuItems.clear();
 }
-void ShoppeState::BuyFlogger(GameState& gameState)
+void ShoppeState::BuyFlogger()
 {
-
+    auto avatar = *_world.GetAvatar();
+    avatar.ChangeStatistic(StatisticType::JOOLS, -FloggerPrice());
+    avatar.ChangeStatistic(StatisticType::FLOGGERS, 1);
+    _menuItems.clear();
 }
-void ShoppeState::BuyArmor(GameState& gameState)
+void ShoppeState::BuyArmor()
 {
-
+    auto avatar = *_world.GetAvatar();
+    avatar.ChangeStatistic(StatisticType::JOOLS, -ArmourPrice());
+    avatar.ChangeStatistic(StatisticType::ARMOUR, 1);
+    _menuItems.clear();
 }
-void ShoppeState::BuyAntitrapSpray(GameState& gameState)
+void ShoppeState::BuyAntitrapSpray()
 {
-
+    auto avatar = *_world.GetAvatar();
+    avatar.ChangeStatistic(StatisticType::JOOLS, -SprayPrice());
+    avatar.ChangeStatistic(StatisticType::ANTITRAP_SPRAY, 1);
+    _menuItems.clear();
 }
 void ShoppeState::Draw()
 {

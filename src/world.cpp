@@ -78,6 +78,8 @@ void World::PopulateBoard(Board board)
     avatar.SetStatistic(StatisticType::ARMOUR, KNIGHT_INITIAL_ARMOUR);
     avatar.SetStatisticMinimum(StatisticType::STREAK, 0);
     avatar.SetStatistic(StatisticType::STREAK, 0);
+    avatar.SetStatisticMinimum(StatisticType::ANTITRAP_SPRAY, 0);
+    avatar.SetStatistic(StatisticType::ANTITRAP_SPRAY, 0);
 
     SpawnCharacter(board, CharacterType::STICKY_BUNS);
     SpawnCharacter(board, CharacterType::BUTTHOLE);

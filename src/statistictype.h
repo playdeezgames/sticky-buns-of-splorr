@@ -12,5 +12,6 @@ enum class StatisticType
     XP_GOAL,
     ARMOUR,
     STREAK,
-    FLOGGERS
+    FLOGGERS,
+    ANTITRAP_SPRAY
 };

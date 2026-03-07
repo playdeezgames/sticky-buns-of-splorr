@@ -27,14 +27,14 @@ private:
     void ChooseMenuItem(GameState& gameState);
     void Leave(GameState& gameState);
     void IncreaseMaximumSupplies();
-    void BuyPotion(GameState& gameState);
-    void BuyFlogger(GameState& gameState);
-    void BuyArmor(GameState& gameState);
-    void BuyAntitrapSpray(GameState& gameState);
+    void BuyPotion();
+    void BuyFlogger();
+    void BuyArmor();
+    void BuyAntitrapSpray();
     int SupplyIncreasePrice() const;
     int PotionPrice() const;
     int FloggerPrice() const;
-    int ArmorPrice() const;
+    int ArmourPrice() const;
     int SprayPrice() const;
 public:
     ShoppeState(
