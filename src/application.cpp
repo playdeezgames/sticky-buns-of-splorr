@@ -54,18 +54,18 @@ void Application::Initialize()
 		IMG_Init(IMG_INIT_PNG);
 
 		src_rects.clear();
-		for(int row = 0; row < TEXTURE_ROWS; ++row)
+        for(int row : std::views::iota(0, TEXTURE_ROWS))
 		{
-			for(int column = 0; column < TEXTURE_COLUMNS; ++column)
+            for(int column : std::views::iota(0, TEXTURE_COLUMNS))
 			{
 				src_rects.push_back({column * TEXTURE_CELL_WIDTH, row * TEXTURE_CELL_HEIGHT, TEXTURE_CELL_WIDTH, TEXTURE_CELL_HEIGHT});
 			}
 		}
 
 		dst_rects.clear();
-		for(int row = 0; row < VIEW_ROWS; ++row)
+        for(int row : std::views::iota(0, VIEW_ROWS))
 		{
-			for(int column = 0; column < VIEW_COLUMNS; ++column)
+            for(int column : std::views::iota(0, VIEW_COLUMNS))
 			{
 				dst_rects.push_back({column * TEXTURE_CELL_WIDTH, row * TEXTURE_CELL_HEIGHT, TEXTURE_CELL_WIDTH, TEXTURE_CELL_HEIGHT});
 			}
@@ -139,9 +139,9 @@ void Application::Loop()
 	if(!quit)
 	{
 		states[gameState]->Draw();
-		for(size_t column = 0; column < frameBuffer.GetColumns(); ++column)
+        for(size_t column : std::views::iota(size_t{0}, frameBuffer.GetColumns()))
 		{
-			for(size_t row = 0; row < frameBuffer.GetRows(); ++row)
+            for(size_t row : std::views::iota(size_t{0}, frameBuffer.GetRows()))
 			{
 				SDL_Rect dst_rect = dst_rects[row*frameBuffer.GetColumns()+column];
 				const auto& cell = frameBuffer.GetCell(column, row);
@@ -180,7 +180,7 @@ void Application::CleanUp()
 }
 void Application::Run()
 {
-		for(;!quit;)
+		while(!quit)
 		{
 			Loop();
 		}
