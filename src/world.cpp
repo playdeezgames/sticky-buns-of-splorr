@@ -92,10 +92,6 @@ void World::PopulateBoard(Board board)
     SpawnCharacter(board, CharacterType::PAWN);
     SpawnCharacter(board, CharacterType::PAWN);
     SpawnCharacter(board, CharacterType::PAWN);
-
-    //TODO: delete stuff belw here, cuz it is test stuff
-    avatar.ChangeStatistic(StatisticType::JOOLS, 100);
-    SpawnCharacter(board, CharacterType::SHOPPE);
 }
 void World::Initialize()
 {

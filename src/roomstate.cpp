@@ -555,8 +555,17 @@ void RoomState::TriggerTrap()
 {
     constexpr int TRAP_DAMAGE = 1;
     _world.AddMessage("Trap!",FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
-    _world.AddMessage(std::format("-{} Health", TRAP_DAMAGE),FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
-    _world.GetAvatar()->ChangeStatistic(StatisticType::HEALTH, -TRAP_DAMAGE);
+    auto avatar = *_world.GetAvatar();
+    if(avatar.GetStatistic(StatisticType::ANTITRAP_SPRAY).value_or(0) > 0)
+    {
+        _world.AddMessage(std::format("-1 Spray"),FrameBufferCellColor::BLACK, FrameBufferCellColor::LIGHT_BLUE);
+        avatar.ChangeStatistic(StatisticType::ANTITRAP_SPRAY, -1);
+    }
+    else
+    {
+        _world.AddMessage(std::format("-{} Health", TRAP_DAMAGE),FrameBufferCellColor::BLACK, FrameBufferCellColor::RED);
+        avatar.ChangeStatistic(StatisticType::HEALTH, -TRAP_DAMAGE);
+    }
 }
 static std::map<int, size_t> joolsGenerator=
 {
