@@ -50,43 +50,43 @@ std::map<FrameBufferCellColor,SDL_Color> Application::palette =
 };
 void Application::Initialize()
 {
-		SDL_Init(SDL_INIT_VIDEO);
-		IMG_Init(IMG_INIT_PNG);
+    SDL_Init(SDL_INIT_VIDEO);
+    IMG_Init(IMG_INIT_PNG);
 
-		src_rects.clear();
-        for(int row : std::views::iota(0, TEXTURE_ROWS))
-		{
-            for(int column : std::views::iota(0, TEXTURE_COLUMNS))
-			{
-				src_rects.push_back({column * TEXTURE_CELL_WIDTH, row * TEXTURE_CELL_HEIGHT, TEXTURE_CELL_WIDTH, TEXTURE_CELL_HEIGHT});
-			}
-		}
+    src_rects.clear();
+    for(int row : std::views::iota(0, TEXTURE_ROWS))
+    {
+        for(int column : std::views::iota(0, TEXTURE_COLUMNS))
+        {
+            src_rects.push_back({column * TEXTURE_CELL_WIDTH, row * TEXTURE_CELL_HEIGHT, TEXTURE_CELL_WIDTH, TEXTURE_CELL_HEIGHT});
+        }
+    }
 
-		dst_rects.clear();
-        for(int row : std::views::iota(0, VIEW_ROWS))
-		{
-            for(int column : std::views::iota(0, VIEW_COLUMNS))
-			{
-				dst_rects.push_back({column * TEXTURE_CELL_WIDTH, row * TEXTURE_CELL_HEIGHT, TEXTURE_CELL_WIDTH, TEXTURE_CELL_HEIGHT});
-			}
-		}
+    dst_rects.clear();
+    for(int row : std::views::iota(0, VIEW_ROWS))
+    {
+        for(int column : std::views::iota(0, VIEW_COLUMNS))
+        {
+            dst_rects.push_back({column * TEXTURE_CELL_WIDTH, row * TEXTURE_CELL_HEIGHT, TEXTURE_CELL_WIDTH, TEXTURE_CELL_HEIGHT});
+        }
+    }
 
-		window = SDL_CreateWindow(
-				GAME_TITLE.data(),
-				SDL_WINDOWPOS_CENTERED,
-				SDL_WINDOWPOS_CENTERED,
-				SCREEN_WIDTH, 
-				SCREEN_HEIGHT,
-				SDL_WINDOW_SHOWN);
-		renderer = SDL_CreateRenderer(window, -1, 0);
-		texture = IMG_LoadTexture(renderer, TEXTURE_FILENAME.data());
-		SDL_RenderSetLogicalSize(renderer, VIEW_WIDTH, VIEW_HEIGHT);
+    window = SDL_CreateWindow(
+            GAME_TITLE.data(),
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            SCREEN_WIDTH, 
+            SCREEN_HEIGHT,
+            SDL_WINDOW_SHOWN);
+    renderer = SDL_CreateRenderer(window, -1, 0);
+    texture = IMG_LoadTexture(renderer, TEXTURE_FILENAME.data());
+    SDL_RenderSetLogicalSize(renderer, VIEW_WIDTH, VIEW_HEIGHT);
 
-		world.Initialize();
+    world.Initialize();
 
-		states.emplace(GameState::ROOM, std::make_unique<RoomState>(frameBuffer, commandBuffer, world));
-		states.emplace(GameState::GAME_MENU, std::make_unique<GameMenuState>(frameBuffer, commandBuffer, world));
-		states.emplace(GameState::SHOPPE, std::make_unique<ShoppeState>(frameBuffer, commandBuffer, world));
+    states.emplace(GameState::ROOM, std::make_unique<RoomState>(frameBuffer, commandBuffer, world));
+    states.emplace(GameState::GAME_MENU, std::make_unique<GameMenuState>(frameBuffer, commandBuffer, world));
+    states.emplace(GameState::SHOPPE, std::make_unique<ShoppeState>(frameBuffer, commandBuffer, world));
 }
 static std::map<SDL_Keycode, CommandType> keycodeCommands = 
 {
@@ -180,9 +180,9 @@ void Application::CleanUp()
 }
 void Application::Run()
 {
-		while(!quit)
-		{
-			Loop();
-		}
-		CleanUp();
+    while(!quit)
+    {
+        Loop();
+    }
+    CleanUp();
 }
