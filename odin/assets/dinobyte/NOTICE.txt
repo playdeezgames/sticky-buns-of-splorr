@@ -1,0 +1,9 @@
+The text in Sticky Buns of SPLORR!! is drawn with the DINOBYTE bitmap font.
+
+DINOBYTE bitmap font by mby, https://mby.itch.io/dinobyte
+Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+
+The glyph sheet (dbyte_1x.png) is used unmodified. The game packs the sheet into
+font_data.odin and tints each glyph with its own colours at draw time; the
+shapes are not changed.
