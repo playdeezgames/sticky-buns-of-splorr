@@ -1,2 +1,2 @@
-make
-butler push html thegrumpygamedev/sticky-buns-of-splorr:html
+#!/usr/bin/env bash
+exec "$(dirname "$0")/tools/ship.sh" "$@"

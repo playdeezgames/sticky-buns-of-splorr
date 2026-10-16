@@ -27,3 +27,8 @@ html/*.wasm
 html/*.html
 html/*.data
 archive20260226/sbos
+odin/sbos
+odin/web/sbos.wasm
+odin/web/odin.js
+dist/
+build/
