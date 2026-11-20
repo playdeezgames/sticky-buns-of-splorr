@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Sticky Buns of SPLORR!!</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  footer { height: 24px; line-height: 24px; font: 11px/24px sans-serif; color: #777; }
+  footer a { color: #888; }
+  canvas { width: min(100vw, calc((100vh - 24px) * 1.2)); aspect-ratio: 240 / 200; image-rendering: pixelated; outline: none; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="240" height="200" tabindex="0"></canvas>
+<footer>Font: DINOBYTE by mby, CC BY 4.0 &middot; <a href="NOTICES.txt" target="_blank">notices</a></footer>
+<script src="odin.js"></script>
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.focus();
+  const mem = new odin.WasmMemoryInterface();
+  const sbos = {
+    present(ptr, w, h) {
+      const bytes = new Uint8ClampedArray(mem.memory.buffer, ptr, w * h * 4);
+      ctx.putImageData(new ImageData(bytes, w, h), 0, 0);
+    },
+  };
+  odin.runWasm('sbos.wasm', null, { sbos }, mem);
+</script>
+</body>
+</html>

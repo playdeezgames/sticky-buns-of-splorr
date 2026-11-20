@@ -20,7 +20,7 @@ odin-native:
 	$(ODIN) build odin $(ODIN_FLAGS) -out:odin/sbos
 odin-web:
 	$(ODIN) build odin $(ODIN_FLAGS) -target:js_wasm32 -out:odin/web/sbos.wasm
-	cp $(HOME)/ODIN/core/sys/wasm/js/odin.js odin/web/odin.js
+	cp "$$($(ODIN) root)/core/sys/wasm/js/odin.js" odin/web/odin.js
 odin-check: odin-native
 	odin/sbos --check
 
