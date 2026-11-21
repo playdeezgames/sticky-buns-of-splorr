@@ -9,6 +9,8 @@ A knight, an 8 by 8 board, and a constant need for sticky buns. Eat. Fight pawns
 
 ## Paste this as the page description
 
+**Latest version:** https://playdeezgames.github.io/sticky-buns-of-splorr/
+
 You are a KNIGHT on a chessboard, and you are hungry.
 
 **How to play**
